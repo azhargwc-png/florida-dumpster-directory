@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Prose from '../../components/Prose.astro';
+import CallButton from '../../components/CallButton.astro';
 import ClosingCta from '../../components/ClosingCta.astro';
 import { PHONE } from '../../config';
 import { isPublished, extractFAQ } from '../../lib/utils';
@@ -19,6 +20,7 @@ const { data } = entry;
 const { Content } = await render(entry);
 const faqs = extractFAQ(entry.body ?? '');
 const heroImg = `/${entry.id}.webp`;
+const hasImg = true; // webp images were included for all blog posts
 ---
 <Layout
   title={data.seo_title.replace('[PHONE]', PHONE)}
@@ -41,19 +43,42 @@ const heroImg = `/${entry.id}.webp`;
     { name: data.h1 },
   ]} />
 
-  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:48px 0 40px">
-    <div class="wrap-article">
-      {data.pubDate && (
-        <div style="font-size:13px;color:#F89B5E;font-weight:600;margin-bottom:12px">
-          {data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-        </div>
-      )}
-      <h1 style="color:#fff;font-weight:700;font-size:36px;line-height:1.2;margin:0;text-wrap:pretty">{data.h1}</h1>
+  <!-- Hero with featured image -->
+  <div class="post-hero">
+    <div class="post-hero__img">
+      <img src={heroImg} alt={data.h1} loading="eager" decoding="async" />
+    </div>
+    <div class="post-hero__overlay">
+      <div class="wrap-article">
+        {data.pubDate && (
+          <div class="post-date">
+            {data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </div>
+        )}
+        <h1>{data.h1}</h1>
+      </div>
     </div>
   </div>
 
-  <div class="wrap-article" style="padding-top:48px;padding-bottom:64px">
-    <Prose><Content /></Prose>
+  <!-- Content + sidebar -->
+  <div class="wrap post-body">
+    <div class="post-content">
+      <Prose><Content /></Prose>
+    </div>
+    <aside class="post-sidebar">
+      <div class="sidebar-cta">
+        <div class="sidebar-cta__head">Reach a Local Dumpster Company</div>
+        <p>Call to get connected with a hauler serving your Southwest Florida city.</p>
+        <CallButton size="sm" />
+      </div>
+      <div class="sidebar-links">
+        <div class="sidebar-links__head">Helpful Links</div>
+        <a href="/tools/dumpster-size-calculator/">→ Dumpster size calculator</a>
+        <a href="/dumpster-sizes/">→ Compare all sizes</a>
+        <a href="/locations/">→ Browse cities</a>
+        <a href="/blog/">← Back to blog</a>
+      </div>
+    </aside>
   </div>
 
   <ClosingCta
@@ -62,3 +87,105 @@ const heroImg = `/${entry.id}.webp`;
     narrow={true}
   />
 </Layout>
+
+<style>
+  .post-hero {
+    position: relative;
+    background: var(--navy-deep);
+    overflow: hidden;
+  }
+  .post-hero__img img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+    opacity: 0.45;
+  }
+  .post-hero__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 36px;
+  }
+  .post-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: #F89B5E;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .post-hero__overlay h1 {
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .post-hero__overlay h1 { font-size: 26px; }
+    .post-hero__img img { max-height: 260px; }
+  }
+
+  .post-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+    align-items: start;
+    padding-top: 52px;
+    padding-bottom: 64px;
+  }
+  @media (max-width: 860px) {
+    .post-body { grid-template-columns: 1fr; }
+    .post-sidebar { order: -1; }
+  }
+
+  .sidebar-cta {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 24px;
+    color: #fff;
+    margin-bottom: 18px;
+  }
+  .sidebar-cta__head {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+  .sidebar-cta p {
+    font-size: 14px;
+    color: #C7D5EA;
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+  .sidebar-links {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .sidebar-links__head {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sidebar-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .sidebar-links a:hover { text-decoration: underline; }
+</style>

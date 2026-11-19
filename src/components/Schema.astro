@@ -15,19 +15,19 @@ interface Props {
 const { pageUrl, faq = [], breadcrumbs = [], article = null, areaServed = [], image, pubDate } = Astro.props;
 const abs = (p: string) => new URL(p, SITE_URL).toString();
 
-const graph: any[] = [];
+const nodes: any[] = [];
 
-graph.push({
+nodes.push({
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: SITE_NAME,
   '@id': abs('/'),
   url: abs(pageUrl),
-  ...(areaServed.length ? { areaServed: areaServed.map((name) => ({ '@type': 'City', name })) } : {}),
+  ...(areaServed.length ? { areaServed: areaServed.map((n) => ({ '@type': 'City', name: n })) } : {}),
 });
 
 if (breadcrumbs.length) {
-  graph.push({
+  nodes.push({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: breadcrumbs.map((c, i) => ({
@@ -40,7 +40,7 @@ if (breadcrumbs.length) {
 }
 
 if (article) {
-  graph.push({
+  nodes.push({
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.headline,
@@ -52,7 +52,7 @@ if (article) {
 }
 
 if (faq.length) {
-  graph.push({
+  nodes.push({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: faq.map((f) => ({
@@ -62,5 +62,7 @@ if (faq.length) {
     })),
   });
 }
+
+const schemaHtml = nodes.map(n => `<script type="application/ld+json">${JSON.stringify(n)}</script>`).join('\n');
 ---
-{graph.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}
+<Fragment set:html={schemaHtml} />

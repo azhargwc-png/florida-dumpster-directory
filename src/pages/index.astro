@@ -23,12 +23,11 @@ const metaDescription = `Find and reach dumpster rental companies across Southwe
     <div class="wrap" style="padding-top:72px;padding-bottom:72px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
       <div style="flex:999 1 460px;min-width:0">
         <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:20px">23 cities · 6 counties · Southwest Florida</div>
-        <h1 style="color:#fff;font-weight:700;font-size:44px;line-height:1.12;margin:0 0 18px;text-wrap:pretty">Florida Dumpster Directory, Find a Local Dumpster Rental Company Near You</h1>
-        <div style="margin-bottom:24px">
-          <CallButton size="md" label={`Call ${PHONE}, Get Connected With a Local Dumpster Company`} />
+        <h1 style="color:#fff;font-weight:700;font-size:44px;line-height:1.12;margin:0 0 18px;text-wrap:pretty">Florida Dumpster Directory — Find a Local Dumpster Rental Company Near You</h1>
+        <p style="font-size:18px;line-height:1.6;margin:0 0 16px;color:#DCE6F4;max-width:580px">Florida Dumpster Directory covers 23 cities across Lee, Collier, Charlotte, Sarasota, DeSoto and Hendry counties. Every city page lists real local dumpster companies with their Google review counts. Choose your city, compare options, and call to get connected with a local hauler for your project.</p>
+        <div style="margin-bottom:0">
+          <CallButton size="md" label={`Call ${PHONE} — Get Connected With a Local Dumpster Company`} />
         </div>
-        <p style="font-size:18px;line-height:1.6;margin:0 0 16px;color:#DCE6F4;max-width:580px">Southwest Florida runs on roll-off dumpsters, from the barrier islands off Sarasota down to Marco Island, and this directory lists the local companies that drop them. Florida Dumpster Directory covers 23 cities across Lee, Collier, Charlotte, Sarasota, DeSoto and Hendry counties. Call {PHONE} and get pointed to a dumpster rental company that works your city.</p>
-        <p style="font-size:18px;line-height:1.6;margin:0;color:#DCE6F4;max-width:580px">This is a directory, not a hauler. Every city page lists real local dumpster companies with their real Google review counts, so you can see who actually serves your area before you pick up the phone. Choose your city, look at the options, and call {PHONE} — one call connects you with a local company for your project.</p>
       </div>
       <div style="flex:1 1 320px;min-width:0">
         <ImageBlock src="/homepage-1.webp" alt="Florida dumpster rental" onDark={true} />
@@ -88,24 +87,26 @@ const metaDescription = `Find and reach dumpster rental companies across Southwe
   <section style="background:var(--navy);color:#fff">
     <div class="wrap" style="padding-top:64px;padding-bottom:64px">
       <h2 style="color:#fff;font-weight:700;font-size:30px;margin:0 0 20px">Why Southwest Florida Keeps Dumpster Companies Busy</h2>
-      <p style="color:#C7D5EA;margin:0 0 28px;max-width:880px">Two things drive dumpster demand in this region: the age and ownership of the housing, and the weather that lands on it.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;margin-bottom:32px">
-        <div style="flex:999 1 460px;min-width:0">
-          <h3 style="color:#F89B5E;font-weight:600;font-size:19px;margin:0 0 12px">On housing, the Census tells the story.</h3>
-          <p style="color:#C7D5EA;margin:0">In Lee County, Census ACS 2019–2023 figures record 74.0% owner-occupied homes and a median owner-occupied value of $326,300. The housing stock is maturing: roughly 24% was built in the 1980s and 1990s, with new construction (2000 and later) making up the majority. Owner-occupied homes that are now 30 to 50 years old are exactly the homes that get re-roofed, gutted and remodeled. Collier County, which includes Naples and Marco Island, runs well above the Lee County median, tracking heavier remodel and rebuild spending on the Collier coast.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px;margin-bottom:36px">
+        {STATS.map((s) => (
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px">
+            <div style="font-family:var(--font-head);font-weight:700;font-size:28px;color:#F89B5E;margin-bottom:4px">{s.value}</div>
+            <div style="font-size:14px;color:#AEC2DF;line-height:1.4">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:32px">
+        <div>
+          <h3 style="color:#F89B5E;font-weight:600;font-size:18px;margin:0 0 10px">Housing drives remodel demand.</h3>
+          <p style="color:#C7D5EA;margin:0;line-height:1.75">In Lee County, Census ACS 2019–2023 figures record 74.0% owner-occupied homes and a median owner-occupied value of $326,300. The housing stock is maturing — homes built in the 1980s and 1990s are now exactly the ones that get re-roofed, gutted and remodeled. Collier County runs well above the Lee median, driving heavier coastal remodel spending.</p>
         </div>
-        <div style="flex:1 1 280px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:14px">
-          {STATS.map((s) => (
-            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:18px">
-              <div style="font-family:var(--font-head);font-weight:700;font-size:26px;color:#F89B5E">{s.value}</div>
-              <div style="font-size:13px;color:#AEC2DF;margin-top:4px">{s.label}</div>
-            </div>
-          ))}
+        <div>
+          <h3 style="color:#F89B5E;font-weight:600;font-size:18px;margin:0 0 10px">The climate keeps haulers on call.</h3>
+          <p style="color:#C7D5EA;margin:0;line-height:1.75">NOAA's 1991–2020 normals record roughly 54 inches of rain a year at Fort Myers, with the bulk falling in the June-to-November wet season that overlaps hurricane season. Storms turn into debris, and a private roll-off handles the cleanup debris that county curbside programs will not take. Paver driveways — common across newer SWFL communities — also need protection from the point load of a loaded roll-off.</p>
         </div>
       </div>
-      <h3 style="color:#F89B5E;font-weight:600;font-size:19px;margin:0 0 12px">The Southwest Florida climate, by the numbers.</h3>
-      <p style="color:#C7D5EA;margin:0 0 20px;max-width:880px">NOAA's 1991–2020 normals at the Fort Myers–Page Field station record an annual mean temperature near 74.7°F and roughly 54 inches of rain a year — well above the U.S. average — with the bulk of it falling in the June-to-November wet season that overlaps Atlantic hurricane season. That single stretch of the calendar is when driveways fill up. Storms turn into debris, and a private roll-off handles the ineligible, private-property and rebuild debris that county curbside storm programs will not pick up.</p>
-      <p style="color:#C7D5EA;margin:0;max-width:880px">The ground shapes the job as much as the sky. Much of Southwest Florida is sandy soil with a high water table and canal-front or swale lots, so where a box can legally and safely sit is a real question. Paver driveways, common across the region's newer communities, can crack under the point load of a loaded roll-off, which is why placement and surface protection come up on nearly every job.</p>
     </div>
   </section>
 

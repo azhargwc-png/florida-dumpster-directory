@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import CallButton from '../components/CallButton.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import ImageBlock from '../components/ImageBlock.astro';
 import Prose from '../components/Prose.astro';
 import { PHONE } from '../config';
 import { CITY_META } from '../data/cities';
@@ -39,44 +38,40 @@ const bodyImg = `/${slug}-2.webp`;
     { name: meta.name },
   ]} />
 
-  <section style="background:linear-gradient(160deg,#12284B 0%,#1B3765 70%,#1E7FC2 150%);color:#fff">
-    <div class="wrap" style="padding-top:60px;padding-bottom:60px;display:flex;flex-wrap:wrap;gap:44px;align-items:center">
-      <div style="flex:999 1 460px;min-width:0">
-        <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px">{meta.county} · {meta.name}, FL</div>
-        <h1 style="color:#fff;font-weight:700;font-size:36px;line-height:1.16;margin:0 0 18px;text-wrap:pretty">{data.h1}</h1>
-        <div style="margin-bottom:22px">
-          <CallButton size="md" label={`Call ${PHONE}, Get Connected With a ${meta.name} Dumpster Company`} />
-        </div>
-      </div>
-      <div style="flex:1 1 300px;min-width:0">
-        <ImageBlock src={heroImg} alt={`${meta.name} dumpster rental`} onDark={true} />
+  <!-- Hero -->
+  <section class="city-hero">
+    <div class="city-hero__img">
+      <img src={heroImg} alt={`Dumpster rental ${meta.name}`} loading="eager" decoding="async" />
+    </div>
+    <div class="city-hero__overlay">
+      <div class="wrap">
+        <div class="city-hero__badge">{meta.county} · {meta.name}, FL</div>
+        <h1>{data.h1}</h1>
+        <CallButton size="md" />
       </div>
     </div>
   </section>
 
-  <div class="wrap" style="padding-top:56px;padding-bottom:56px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start">
-    <div style="flex:999 1 560px;min-width:0">
+  <!-- Body: content + sticky sidebar -->
+  <div class="wrap city-body">
+    <div class="city-content">
       <Prose><Content /></Prose>
     </div>
-
-    <aside style="flex:1 1 280px;min-width:0">
-      <div style="position:sticky;top:90px">
-        <div style="background:var(--navy);border-radius:16px;padding:26px;color:#fff;margin-bottom:20px">
-          <div style="font-family:var(--font-head);font-weight:700;font-size:19px;margin-bottom:8px">Reach a {meta.name} hauler</div>
-          <p style="font-size:14px;color:#C7D5EA;margin:0 0 18px">One call points you to a local company serving {meta.county}.</p>
-          <CallButton size="md" />
-        </div>
-        <div style="background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:20px">
-          <div style="font-family:var(--font-head);font-weight:600;font-size:16px;color:var(--navy);margin-bottom:12px">Helpful links</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:15px">
-            <a href="/tools/dumpster-size-calculator/">→ Dumpster size calculator</a>
-            <a href="/dumpster-sizes/">→ Compare all sizes</a>
-            <a href="/locations/">→ Nearby cities</a>
-            <a href="/concrete-dumpster-rental/">→ Concrete &amp; heavy debris</a>
-          </div>
-        </div>
-        <ImageBlock src={bodyImg} alt={`${meta.name} dumpster`} />
+    <aside class="city-sidebar">
+      <div class="city-sidebar__cta">
+        <div class="city-sidebar__head">Reach a {meta.name} hauler</div>
+        <p>One call points you to a local dumpster company serving {meta.county}.</p>
+        <CallButton size="sm" />
       </div>
+      <div class="city-sidebar__links">
+        <div class="city-sidebar__links-head">Helpful Links</div>
+        <a href="/tools/dumpster-size-calculator/">→ Dumpster size calculator</a>
+        <a href="/dumpster-sizes/">→ Compare all sizes</a>
+        <a href="/locations/">→ Nearby cities</a>
+        <a href="/concrete-dumpster-rental/">→ Concrete &amp; heavy debris</a>
+      </div>
+      <img src={bodyImg} alt={`${meta.name} dumpster rental`} loading="lazy" decoding="async"
+        style="width:100%;border-radius:14px;object-fit:cover;aspect-ratio:4/3;margin-top:18px" />
     </aside>
   </div>
 
@@ -85,3 +80,115 @@ const bodyImg = `/${slug}-2.webp`;
     body={`Look at the local companies and review counts above, then call ${PHONE} to get connected with a dumpster rental company serving ${meta.name}. See nearby cities on the <a href="/locations/">Locations hub</a> or compare sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a>.`}
   />
 </Layout>
+
+<style>
+  .city-hero {
+    position: relative;
+    background: var(--navy-deep);
+    overflow: hidden;
+    min-height: 480px;
+    display: flex;
+    align-items: flex-end;
+  }
+  .city-hero__img {
+    position: absolute;
+    inset: 0;
+  }
+  .city-hero__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.28;
+  }
+  .city-hero__overlay {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 64px 0;
+  }
+  .city-hero__badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #FFE2CC;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .city-hero__overlay h1 {
+    color: #fff;
+    font-size: 38px;
+    font-weight: 700;
+    margin: 0 0 22px;
+    line-height: 1.15;
+    max-width: 820px;
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .city-hero__overlay h1 { font-size: 26px; }
+    .city-hero { min-height: 320px; }
+  }
+
+  .city-body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 52px;
+    align-items: start;
+    padding-top: 56px;
+    padding-bottom: 64px;
+  }
+  @media (max-width: 900px) {
+    .city-body { grid-template-columns: 1fr; }
+  }
+
+  .city-sidebar__cta {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 26px;
+    color: #fff;
+    margin-bottom: 16px;
+    position: sticky;
+    top: 88px;
+  }
+  .city-sidebar__head {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .city-sidebar__cta p {
+    font-size: 14px;
+    color: #C7D5EA;
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+  .city-sidebar__links {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .city-sidebar__links-head {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .city-sidebar__links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .city-sidebar__links a:hover { text-decoration: underline; }
+</style>

@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import CallButton from '../components/CallButton.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import ImageBlock from '../components/ImageBlock.astro';
 import Prose from '../components/Prose.astro';
 import { PHONE } from '../config';
 import { extractFAQ } from '../lib/utils';
@@ -16,6 +15,7 @@ const pageUrl = data.url;
 const slug = entry.id;
 const faqs = extractFAQ(entry.body ?? '');
 const heroImg = `/${slug}-1.webp`;
+const bodyImg = `/${slug}-2.webp`;
 ---
 <Layout
   title={data.seo_title.replace('[PHONE]', PHONE)}
@@ -33,21 +33,41 @@ const heroImg = `/${slug}-1.webp`;
     { name: data.h1 },
   ]} />
 
-  <section style="background:linear-gradient(160deg,#12284B 0%,#1B3765 70%,#1E7FC2 150%);color:#fff">
-    <div class="wrap" style="padding-top:60px;padding-bottom:60px;display:flex;flex-wrap:wrap;gap:44px;align-items:center">
-      <div style="flex:999 1 460px;min-width:0">
-        <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px">By Project</div>
-        <h1 style="color:#fff;font-weight:700;font-size:36px;line-height:1.16;margin:0 0 18px;text-wrap:pretty">{data.h1}</h1>
-        <div style="margin-bottom:22px"><CallButton size="md" /></div>
-      </div>
-      <div style="flex:1 1 300px;min-width:0">
-        <ImageBlock src={heroImg} alt={data.h1} onDark={true} />
+  <!-- Hero -->
+  <section class="service-hero">
+    <div class="service-hero__img">
+      <img src={heroImg} alt={data.h1} loading="eager" decoding="async" />
+    </div>
+    <div class="service-hero__overlay">
+      <div class="wrap">
+        <div class="service-hero__badge">By Project</div>
+        <h1>{data.h1}</h1>
+        <CallButton size="md" />
       </div>
     </div>
   </section>
 
-  <div class="wrap-article" style="padding-top:56px;padding-bottom:56px">
-    <Prose><Content /></Prose>
+  <!-- Body -->
+  <div class="wrap service-body">
+    <div class="service-content">
+      <Prose><Content /></Prose>
+    </div>
+    <aside class="service-sidebar">
+      <div class="service-sidebar__cta">
+        <div class="service-sidebar__head">Reach a Local Hauler</div>
+        <p>One call connects you with a dumpster rental company in your Southwest Florida city.</p>
+        <CallButton size="sm" />
+      </div>
+      <div class="service-sidebar__links">
+        <div class="service-sidebar__links-head">Related Pages</div>
+        <a href="/dumpster-sizes/">Compare sizes</a>
+        <a href="/tools/dumpster-size-calculator/">Size calculator</a>
+        <a href="/tools/dumpster-cost-estimator/">Cost estimator</a>
+        <a href="/locations/">Browse by city</a>
+      </div>
+      <img src={bodyImg} alt={data.h1} loading="lazy" decoding="async"
+        style="width:100%;border-radius:14px;object-fit:cover;aspect-ratio:4/3;margin-top:18px" />
+    </aside>
   </div>
 
   <ClosingCta
@@ -55,3 +75,113 @@ const heroImg = `/${slug}-1.webp`;
     body={`Call ${PHONE} to reach a local dumpster rental company in your Southwest Florida city. Compare sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a>.`}
   />
 </Layout>
+
+<style>
+  .service-hero {
+    position: relative;
+    background: var(--navy-deep);
+    overflow: hidden;
+    min-height: 440px;
+    display: flex;
+    align-items: flex-end;
+  }
+  .service-hero__img {
+    position: absolute;
+    inset: 0;
+  }
+  .service-hero__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+  }
+  .service-hero__overlay {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 60px 0;
+  }
+  .service-hero__badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #FFE2CC;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .service-hero__overlay h1 {
+    color: #fff;
+    font-size: 38px;
+    font-weight: 700;
+    margin: 0 0 22px;
+    line-height: 1.15;
+    max-width: 760px;
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .service-hero__overlay h1 { font-size: 28px; }
+    .service-hero { min-height: 320px; }
+  }
+
+  .service-body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 52px;
+    align-items: start;
+    padding-top: 56px;
+    padding-bottom: 64px;
+  }
+  @media (max-width: 900px) {
+    .service-body { grid-template-columns: 1fr; }
+  }
+
+  .service-sidebar__cta {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 26px;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .service-sidebar__head {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .service-sidebar__cta p {
+    font-size: 14px;
+    color: #C7D5EA;
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+  .service-sidebar__links {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .service-sidebar__links-head {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .service-sidebar__links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .service-sidebar__links a:hover { text-decoration: underline; }
+</style>

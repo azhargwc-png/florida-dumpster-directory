@@ -1,91 +1,103 @@
-/**
- * Remark plugin: converts FAQ sections in markdown to <details>/<summary> accordions.
- *
- * Matches a "## Frequently Asked Questions" heading, then converts each
- * "**Question?**" paragraph + following answer paragraph(s) to a <details class="faq"> element.
- */
+import { visit } from 'unist-util-visit';
+
+const PHONE_DISPLAY = '123-456-7890';
+const PHONE_TEL = '+11234567890';
 
 export default function remarkFaqAccordion() {
   return (tree) => {
+    // 1. Replace [PHONE] text nodes with actual number (linked)
+    visit(tree, 'text', (node) => {
+      if (node.value && node.value.includes('[PHONE]')) {
+        node.value = node.value.replace(/\[PHONE\]/g, PHONE_DISPLAY);
+      }
+    });
+
+    // 2. Remove paragraphs that contain editorial notes (← ...) or are just CTA placeholders
+    //    These are lines like: **[ Call 123-456-7890... ]**  ← CTA block above the fold
+    visit(tree, 'paragraph', (node, index, parent) => {
+      const text = node.children
+        .map((c) => (c.type === 'text' ? c.value : c.type === 'strong' ? c.children?.map(x => x.value || '').join('') : ''))
+        .join('');
+      if (text.includes('←') || /^\s*\[.+\]\s*$/.test(text.trim())) {
+        parent.children.splice(index, 1);
+        return index;
+      }
+    });
+
+    // 3. Transform FAQ sections into <details>/<summary> accordions
     const nodes = tree.children;
-
-    for (let i = 0; i < nodes.length; i++) {
+    let i = 0;
+    while (i < nodes.length) {
       const node = nodes[i];
-
-      if (
-        node.type === 'heading' &&
-        node.depth === 2 &&
-        getHeadingText(node).toLowerCase().includes('frequently asked')
-      ) {
-        const newNodes = [node];
-        let j = i + 1;
-
-        while (j < nodes.length) {
-          const curr = nodes[j];
-
-          if (curr.type === 'heading') break;
-
-          // Question: paragraph whose only child is a strong node
-          if (
-            curr.type === 'paragraph' &&
-            curr.children.length === 1 &&
-            curr.children[0].type === 'strong'
-          ) {
-            const questionText = serializeInline(curr.children[0].children);
-            const answerParts = [];
-            j++;
-
-            while (j < nodes.length) {
-              const next = nodes[j];
-              if (next.type === 'heading') break;
-              if (
-                next.type === 'paragraph' &&
-                next.children.length === 1 &&
-                next.children[0].type === 'strong'
-              ) break;
-              if (next.type === 'paragraph') {
-                answerParts.push(`<p>${serializeInline(next.children)}</p>`);
-              }
-              j++;
-            }
-
-            newNodes.push({
-              type: 'html',
-              value: `<details class="faq">\n<summary>${questionText}</summary>\n${answerParts.join('\n')}\n</details>`,
-            });
-          } else {
-            newNodes.push(curr);
+      // Find ## Frequently Asked Questions heading
+      if (node.type === 'heading' && node.depth === 2) {
+        const headingText = node.children.map(c => c.value || '').join('').trim();
+        if (/^Frequently Asked Questions/i.test(headingText)) {
+          const faqNodes = [];
+          let j = i + 1;
+          while (j < nodes.length) {
+            const n = nodes[j];
+            if (n.type === 'heading' && n.depth <= 2) break;
+            faqNodes.push(n);
             j++;
           }
-        }
 
-        nodes.splice(i, j - i, ...newNodes);
-        break;
+          const accordions = [];
+          let k = 0;
+          while (k < faqNodes.length) {
+            const qNode = faqNodes[k];
+            // Question: a paragraph whose first child is a strong element
+            if (
+              qNode.type === 'paragraph' &&
+              qNode.children.length >= 1 &&
+              qNode.children[0].type === 'strong'
+            ) {
+              const qText = qNode.children[0].children.map(c => c.value || '').join('').trim();
+              const answerParts = [];
+              let m = k + 1;
+              while (m < faqNodes.length) {
+                const an = faqNodes[m];
+                if (
+                  an.type === 'paragraph' &&
+                  an.children.length >= 1 &&
+                  an.children[0].type === 'strong'
+                ) break;
+                if (an.type === 'heading') break;
+                answerParts.push(an);
+                m++;
+              }
+              const aHtml = answerParts
+                .map((n) => {
+                  if (n.type === 'paragraph') {
+                    const txt = n.children.map(c => c.value || (c.type === 'strong' ? `<strong>${c.children.map(x => x.value||'').join('')}</strong>` : '')).join('');
+                    return `<p>${txt}</p>`;
+                  }
+                  return '';
+                })
+                .join('');
+              accordions.push({
+                type: 'html',
+                value: `<details class="faq"><summary>${qText}</summary>${aHtml}</details>`,
+              });
+              k = m;
+            } else {
+              k++;
+            }
+          }
+
+          // Replace the heading + faq nodes with the section heading + accordions
+          const replacement = [
+            { type: 'html', value: '<div class="faq-section">' },
+            node,
+            ...accordions,
+            { type: 'html', value: '</div>' },
+          ];
+          nodes.splice(i, j - i, ...replacement);
+          i += replacement.length;
+          continue;
+        }
       }
+      i++;
     }
   };
-}
-
-function getHeadingText(node) {
-  return node.children.map((c) => (c.type === 'text' ? c.value : '')).join('');
-}
-
-function serializeInline(children) {
-  return (children || []).map((child) => {
-    if (child.type === 'text') return escHtml(child.value);
-    if (child.type === 'strong') return `<strong>${serializeInline(child.children)}</strong>`;
-    if (child.type === 'emphasis') return `<em>${serializeInline(child.children)}</em>`;
-    if (child.type === 'inlineCode') return `<code>${escHtml(child.value)}</code>`;
-    if (child.type === 'link')
-      return `<a href="${child.url}">${serializeInline(child.children)}</a>`;
-    if (child.type === 'html') return child.value;
-    return '';
-  }).join('');
-}
-
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
 }

@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import CallButton from '../components/CallButton.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import ImageBlock from '../components/ImageBlock.astro';
 import Prose from '../components/Prose.astro';
 import { PHONE } from '../config';
 import { extractFAQ } from '../lib/utils';
@@ -16,8 +15,7 @@ const pageUrl = data.url;
 const slug = entry.id;
 const faqs = extractFAQ(entry.body ?? '');
 const heroImg = `/${slug}-1.webp`;
-
-// Extract yards from URL e.g. /10-yard-dumpster-rental/ → 10
+const bodyImg = `/${slug}-2.webp`;
 const yards = parseInt(pageUrl.match(/^\/(\d+)-yard/)?.[1] ?? '0');
 ---
 <Layout
@@ -38,25 +36,172 @@ const yards = parseInt(pageUrl.match(/^\/(\d+)-yard/)?.[1] ?? '0');
     { name: `${yards}-Yard` },
   ]} />
 
-  <section style="background:linear-gradient(160deg,#12284B 0%,#1B3765 70%,#1E7FC2 150%);color:#fff">
-    <div class="wrap" style="padding-top:60px;padding-bottom:60px;display:flex;flex-wrap:wrap;gap:44px;align-items:center">
-      <div style="flex:999 1 460px;min-width:0">
-        <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px">Dumpster Sizes · {yards}-Yard</div>
-        <h1 style="color:#fff;font-weight:700;font-size:38px;line-height:1.14;margin:0 0 18px;text-wrap:pretty">{data.h1}</h1>
-        <div style="margin-bottom:22px"><CallButton size="md" /></div>
-      </div>
-      <div style="flex:1 1 300px;min-width:0">
-        <ImageBlock src={heroImg} alt={`${yards}-yard dumpster`} onDark={true} />
+  <!-- Hero -->
+  <section class="size-hero">
+    <div class="size-hero__img">
+      <img src={heroImg} alt={`${yards}-yard dumpster`} loading="eager" decoding="async" />
+    </div>
+    <div class="size-hero__overlay">
+      <div class="wrap">
+        <div class="size-hero__badge">Dumpster Sizes · {yards}-Yard</div>
+        <h1>{data.h1}</h1>
+        <CallButton size="md" />
       </div>
     </div>
   </section>
 
-  <div class="wrap-article" style="padding-top:56px;padding-bottom:56px">
-    <Prose><Content /></Prose>
+  <!-- Body -->
+  <div class="wrap size-body">
+    <div class="size-content">
+      <Prose><Content /></Prose>
+    </div>
+    <aside class="size-sidebar">
+      <div class="size-sidebar__cta">
+        <div class="size-sidebar__yards">{yards}<span>yd</span></div>
+        <div class="size-sidebar__head">Need a {yards}-yard box?</div>
+        <p>Call to reach a local dumpster rental company in your Southwest Florida city.</p>
+        <CallButton size="sm" />
+      </div>
+      <div class="size-sidebar__links">
+        <div class="size-sidebar__links-head">Compare Sizes</div>
+        <a href="/10-yard-dumpster-rental/">10-Yard</a>
+        <a href="/15-yard-dumpster-rental/">15-Yard</a>
+        <a href="/20-yard-dumpster-rental/">20-Yard ★</a>
+        <a href="/30-yard-dumpster-rental/">30-Yard</a>
+        <a href="/40-yard-dumpster-rental/">40-Yard</a>
+        <a href="/tools/dumpster-size-calculator/" style="margin-top:6px;color:var(--orange)">→ Size calculator</a>
+      </div>
+      <img src={bodyImg} alt={`${yards}-yard dumpster rental`} loading="lazy" decoding="async"
+        style="width:100%;border-radius:14px;object-fit:cover;aspect-ratio:4/3;margin-top:18px" />
+    </aside>
   </div>
 
   <ClosingCta
     heading={`Call Now to Reach a Local ${yards}-Yard Dumpster Company`}
-    body={`If a ${yards}-yard roll-off fits your job, call ${PHONE} to reach a local dumpster rental company in your Southwest Florida city. Compare sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a> or use the <a href="/tools/dumpster-size-calculator/">size calculator</a>.`}
+    body={`Call ${PHONE} to reach a local dumpster rental company in your Southwest Florida city. Compare sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a> or use the <a href="/tools/dumpster-size-calculator/">size calculator</a>.`}
   />
 </Layout>
+
+<style>
+  .size-hero {
+    position: relative;
+    background: var(--navy-deep);
+    overflow: hidden;
+    min-height: 440px;
+    display: flex;
+    align-items: flex-end;
+  }
+  .size-hero__img {
+    position: absolute;
+    inset: 0;
+  }
+  .size-hero__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+  }
+  .size-hero__overlay {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 60px 0;
+  }
+  .size-hero__badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #FFE2CC;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .size-hero__overlay h1 {
+    color: #fff;
+    font-size: 38px;
+    font-weight: 700;
+    margin: 0 0 22px;
+    line-height: 1.15;
+    max-width: 760px;
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .size-hero__overlay h1 { font-size: 28px; }
+    .size-hero { min-height: 320px; }
+  }
+
+  .size-body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 52px;
+    align-items: start;
+    padding-top: 56px;
+    padding-bottom: 64px;
+  }
+  @media (max-width: 900px) {
+    .size-body { grid-template-columns: 1fr; }
+  }
+
+  .size-sidebar__cta {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 26px;
+    color: #fff;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .size-sidebar__yards {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 56px;
+    color: #F89B5E;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .size-sidebar__yards span {
+    font-size: 24px;
+    font-weight: 500;
+    color: #AEC2DF;
+  }
+  .size-sidebar__head {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    margin: 8px 0 8px;
+  }
+  .size-sidebar__cta p {
+    font-size: 14px;
+    color: #C7D5EA;
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+  .size-sidebar__links {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .size-sidebar__links-head {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .size-sidebar__links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .size-sidebar__links a:hover { text-decoration: underline; }
+</style>
