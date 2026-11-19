@@ -5,10 +5,15 @@ import CallButton from '../../../components/CallButton.astro';
 import { PHONE, PHONE_TEL } from '../../../config';
 import rawHtml from '../../../tool-pages/dumpster-cost-estimator.html?raw';
 
-const toolHtml = rawHtml
+const cleaned = rawHtml
   .replace(/<!--[\s\S]*?-->/g, '')
   .replace(/\[PHONE\]/g, PHONE)
   .trim();
+
+// Separate the script from the HTML so we can inject it as is:inline
+const scriptMatch = cleaned.match(/<script>([\s\S]*?)<\/script>/i);
+const inlineJs = scriptMatch ? scriptMatch[1] : '';
+const toolHtml = cleaned.replace(/<script>[\s\S]*?<\/script>/gi, '');
 ---
 <Layout
   title="Dumpster Cost Estimator | Florida Dumpster Directory"
@@ -37,6 +42,7 @@ const toolHtml = rawHtml
   <div class="wrap tool-layout">
     <div class="tool-main">
       <div class="tool-embed" set:html={toolHtml} />
+      {inlineJs && <script is:inline set:html={inlineJs} />}
     </div>
     <aside class="tool-aside">
       <div class="tool-aside__cta">

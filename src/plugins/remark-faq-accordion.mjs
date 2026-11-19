@@ -3,8 +3,26 @@ import { visit } from 'unist-util-visit';
 const PHONE_DISPLAY = '123-456-7890';
 const PHONE_TEL = '+11234567890';
 
+const EDITORIAL_H3 = /^(internal links map|schema\s*[\(\[])/i;
+
 export default function remarkFaqAccordion() {
   return (tree) => {
+    // 0. Strip editorial-only sections at end of content files:
+    //    ### Internal links map  (anchor/target table for editors)
+    //    ### Schema (...)        (JSON-LD reference block for editors)
+    //    These are ALWAYS the last content in the file; splice from first match to end.
+    const rootNodes = tree.children;
+    for (let i = 0; i < rootNodes.length; i++) {
+      const n = rootNodes[i];
+      if (n.type === 'heading' && n.depth === 3) {
+        const text = n.children.map(c => c.value || '').join('').trim();
+        if (EDITORIAL_H3.test(text)) {
+          rootNodes.splice(i);
+          break;
+        }
+      }
+    }
+
     // 1. Replace [PHONE] text nodes with actual number (linked)
     visit(tree, 'text', (node) => {
       if (node.value && node.value.includes('[PHONE]')) {
