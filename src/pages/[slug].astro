@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import CityPage from '../templates/CityPage.astro';
+import ServicePage from '../templates/ServicePage.astro';
+import SizePage from '../templates/SizePage.astro';
+import { isPublished } from '../lib/utils';
+
+export async function getStaticPaths() {
+  const [cities, services, sizes] = await Promise.all([
+    getCollection('cities'),
+    getCollection('services'),
+    getCollection('sizes'),
+  ]);
+
+  const now = new Date();
+
+  const cityPaths = cities
+    .filter(e => isPublished(e.data))
+    .map(entry => ({ params: { slug: entry.id }, props: { entry, type: 'city' } }));
+
+  const servicePaths = services
+    .filter(e => isPublished(e.data))
+    .map(entry => ({ params: { slug: entry.id }, props: { entry, type: 'service' } }));
+
+  const sizePaths = sizes
+    .filter(e => isPublished(e.data))
+    .map(entry => ({ params: { slug: entry.id }, props: { entry, type: 'size' } }));
+
+  return [...cityPaths, ...servicePaths, ...sizePaths];
+}
+
+const { entry, type } = Astro.props;
+---
+{type === 'city' && <CityPage entry={entry} />}
+{type === 'service' && <ServicePage entry={entry} />}
+{type === 'size' && <SizePage entry={entry} />}

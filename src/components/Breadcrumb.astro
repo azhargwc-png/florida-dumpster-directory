@@ -1,0 +1,19 @@
+---
+interface Crumb { name: string; path?: string; }
+interface Props { items: Crumb[]; }
+const { items } = Astro.props;
+---
+<div style="background:#fff;border-bottom:1px solid var(--line-soft)">
+  <div class="wrap" style="padding-top:12px;padding-bottom:12px;font-size:14px;color:var(--muted-2)">
+    {items.map((c, i) => (
+      <>
+        {i > 0 && <span style="color:#CBD5E1"> › </span>}
+        {c.path ? (
+          <a href={c.path} style="text-decoration:none">{c.name}</a>
+        ) : (
+          <span style="color:var(--navy);font-weight:500">{c.name}</span>
+        )}
+      </>
+    ))}
+  </div>
+</div>

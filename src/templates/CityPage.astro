@@ -1,0 +1,87 @@
+---
+import { render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CallButton from '../components/CallButton.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import ImageBlock from '../components/ImageBlock.astro';
+import Prose from '../components/Prose.astro';
+import { PHONE } from '../config';
+import { CITY_META } from '../data/cities';
+import { extractFAQ } from '../lib/utils';
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const pageUrl = data.url;
+const slug = entry.id;
+const meta = CITY_META[slug] ?? { name: slug, county: 'Florida' };
+const faqs = extractFAQ(entry.body ?? '');
+const heroImg = `/${slug}-1.webp`;
+const bodyImg = `/${slug}-2.webp`;
+---
+<Layout
+  title={data.seo_title.replace('[PHONE]', PHONE)}
+  description={data.meta_description.replace('[PHONE]', PHONE)}
+  pageUrl={pageUrl}
+  faq={faqs}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Locations', path: '/locations/' },
+    { name: meta.name, path: pageUrl },
+  ]}
+  areaServed={[meta.name]}
+  image={heroImg}
+>
+  <Breadcrumb items={[
+    { name: 'Home', path: '/' },
+    { name: 'Locations', path: '/locations/' },
+    { name: meta.name },
+  ]} />
+
+  <section style="background:linear-gradient(160deg,#12284B 0%,#1B3765 70%,#1E7FC2 150%);color:#fff">
+    <div class="wrap" style="padding-top:60px;padding-bottom:60px;display:flex;flex-wrap:wrap;gap:44px;align-items:center">
+      <div style="flex:999 1 460px;min-width:0">
+        <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px">{meta.county} · {meta.name}, FL</div>
+        <h1 style="color:#fff;font-weight:700;font-size:36px;line-height:1.16;margin:0 0 18px;text-wrap:pretty">{data.h1}</h1>
+        <div style="margin-bottom:22px">
+          <CallButton size="md" label={`Call ${PHONE}, Get Connected With a ${meta.name} Dumpster Company`} />
+        </div>
+      </div>
+      <div style="flex:1 1 300px;min-width:0">
+        <ImageBlock src={heroImg} alt={`${meta.name} dumpster rental`} onDark={true} />
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-top:56px;padding-bottom:56px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start">
+    <div style="flex:999 1 560px;min-width:0">
+      <Prose><Content /></Prose>
+    </div>
+
+    <aside style="flex:1 1 280px;min-width:0">
+      <div style="position:sticky;top:90px">
+        <div style="background:var(--navy);border-radius:16px;padding:26px;color:#fff;margin-bottom:20px">
+          <div style="font-family:var(--font-head);font-weight:700;font-size:19px;margin-bottom:8px">Reach a {meta.name} hauler</div>
+          <p style="font-size:14px;color:#C7D5EA;margin:0 0 18px">One call points you to a local company serving {meta.county}.</p>
+          <CallButton size="md" />
+        </div>
+        <div style="background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:20px">
+          <div style="font-family:var(--font-head);font-weight:600;font-size:16px;color:var(--navy);margin-bottom:12px">Helpful links</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:15px">
+            <a href="/tools/dumpster-size-calculator/">→ Dumpster size calculator</a>
+            <a href="/dumpster-sizes/">→ Compare all sizes</a>
+            <a href="/locations/">→ Nearby cities</a>
+            <a href="/concrete-dumpster-rental/">→ Concrete &amp; heavy debris</a>
+          </div>
+        </div>
+        <ImageBlock src={bodyImg} alt={`${meta.name} dumpster`} />
+      </div>
+    </aside>
+  </div>
+
+  <ClosingCta
+    heading={`Call Now to Reach a ${meta.name} Dumpster Company`}
+    body={`Look at the local companies and review counts above, then call ${PHONE} to get connected with a dumpster rental company serving ${meta.name}. See nearby cities on the <a href="/locations/">Locations hub</a> or compare sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a>.`}
+  />
+</Layout>

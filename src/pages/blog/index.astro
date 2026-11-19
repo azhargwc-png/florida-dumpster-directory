@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { isPublished } from '../../lib/utils';
+import { PHONE } from '../../config';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(e => isPublished(e.data))
+  .sort((a, b) => {
+    const da = a.data.pubDate?.getTime() ?? 0;
+    const db = b.data.pubDate?.getTime() ?? 0;
+    return db - da;
+  });
+---
+<Layout
+  title="Dumpster Rental Blog | Florida Dumpster Directory"
+  description={`Guides on dumpster rental in Southwest Florida — sizing, permits, project planning, debris rules, and local tips. Call ${PHONE} to reach a local hauler.`}
+  pageUrl="/blog/"
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog/' }]}
+>
+  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:48px 0 40px">
+    <div class="wrap">
+      <div style="font-size:13px;font-weight:600;color:#F89B5E;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">Blog</div>
+      <h1 style="color:#fff;font-weight:700;font-size:38px;margin:0 0 12px">Dumpster Rental Guides</h1>
+      <p style="color:#C7D5EA;font-size:18px;margin:0;max-width:640px">Sizing, permits, project planning and Florida-specific debris rules — written for Southwest Florida homeowners and contractors.</p>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:48px;padding-bottom:64px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:24px">
+      {posts.map((post) => (
+        <a href={post.data.url} style="text-decoration:none;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:box-shadow 0.15s">
+          {post.data.pubDate && (
+            <div style="padding:14px 18px 0;font-size:13px;color:var(--muted-2)">
+              {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </div>
+          )}
+          <div style="padding:16px 18px 20px;flex:1;display:flex;flex-direction:column">
+            <h2 style="font-size:17px;font-weight:600;color:var(--navy);margin:0 0 10px;line-height:1.4">{post.data.h1}</h2>
+            <p style="font-size:14px;color:var(--muted);margin:0 0 14px;line-height:1.6;flex:1">{post.data.meta_description.replace('[PHONE]', PHONE).slice(0, 160)}{post.data.meta_description.length > 160 ? '…' : ''}</p>
+            <span style="font-size:14px;font-weight:600;color:var(--blue)">Read →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>

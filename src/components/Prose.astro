@@ -1,0 +1,50 @@
+---
+interface Props { class?: string; }
+const { class: cls = '' } = Astro.props;
+---
+<div class={`prose ${cls}`}>
+  <slot />
+</div>
+
+<style>
+  .prose { color: var(--ink-2); font-size: 17px; line-height: 1.7; }
+  .prose :global(h2) {
+    font-family: var(--font-head); font-weight: 700; font-size: 26px;
+    color: var(--navy); margin: 40px 0 14px;
+  }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(h3) {
+    font-family: var(--font-head); font-weight: 600; font-size: 20px;
+    color: var(--navy); margin: 28px 0 12px;
+  }
+  .prose :global(p) { margin: 0 0 20px; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 22px; padding-left: 22px; line-height: 1.9; }
+  .prose :global(li) { margin-bottom: 4px; }
+  .prose :global(strong) { color: var(--navy); }
+  .prose :global(a) { color: var(--blue); text-decoration: none; }
+  .prose :global(a:hover) { text-decoration: underline; }
+  .prose :global(em) { font-style: italic; }
+  .prose :global(blockquote) {
+    background: var(--orange-soft); border: 1px solid var(--orange-border);
+    border-left: 5px solid var(--orange); border-radius: var(--radius);
+    padding: 20px 24px; margin: 0 0 24px;
+  }
+  .prose :global(blockquote p) { margin: 0; }
+  .prose :global(p > em:only-child) { color: var(--muted-2); font-size: 14px; }
+  /* FAQ accordions inside prose body */
+  .prose :global(details.faq) {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 4px 22px; margin-bottom: 14px;
+  }
+  .prose :global(details.faq > summary) {
+    font-family: var(--font-head); font-weight: 600; color: var(--navy);
+    font-size: 18px; padding: 16px 0; cursor: pointer; list-style: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .prose :global(details.faq > summary::after) {
+    content: '+'; flex-shrink: 0; font-size: 22px; font-weight: 400; color: var(--orange);
+  }
+  .prose :global(details.faq[open] > summary::after) { content: '−'; }
+  .prose :global(details.faq > summary::-webkit-details-marker) { display: none; }
+  .prose :global(details.faq > p) { margin: 0 0 16px; color: var(--muted); }
+</style>

@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Prose from '../../components/Prose.astro';
+import { PHONE } from '../../config';
+
+const entries = await getCollection('legal');
+const entry = entries.find(e => e.id === 'about');
+if (!entry) throw new Error('about.md not found');
+const { data } = entry;
+const { Content } = await render(entry);
+---
+<Layout
+  title={data.seo_title}
+  description={data.meta_description.replace('[PHONE]', PHONE)}
+  pageUrl={data.url}
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'About', path: '/about/' }]}
+>
+  <Breadcrumb items={[{ name: 'Home', path: '/' }, { name: 'About' }]} />
+  <div class="wrap-article" style="padding-top:52px;padding-bottom:72px">
+    <h1 style="font-size:38px;font-weight:700;margin:0 0 32px">{data.h1}</h1>
+    <Prose><Content /></Prose>
+  </div>
+</Layout>

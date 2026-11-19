@@ -1,0 +1,28 @@
+---
+import PhoneIcon from './PhoneIcon.astro';
+import { PHONE, PHONE_TEL } from '../config';
+
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  label?: string;
+  variant?: 'orange' | 'white';
+  class?: string;
+}
+const { size = 'md', label, variant = 'orange', class: cls = '' } = Astro.props;
+const text = label ?? `Call ${PHONE}`;
+const iconColor = variant === 'white' ? '#D9480F' : '#FFFFFF';
+const pad = size === 'lg' ? '18px 36px' : size === 'sm' ? '11px 20px' : '15px 28px';
+const fs = size === 'lg' ? '22px' : size === 'sm' ? '15px' : '18px';
+const radius = size === 'sm' ? '8px' : '10px';
+const whiteStyle = 'background:#fff;color:#D9480F;box-shadow:0 8px 24px rgba(0,0,0,0.2);';
+---
+<a
+  href={`tel:${PHONE_TEL}`}
+  class={cls}
+  style={`display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;border-radius:${radius};padding:${pad};font-size:${fs};${
+    variant === 'white' ? whiteStyle : 'background:#F26A1B;color:#fff;box-shadow:0 6px 18px rgba(242,106,27,0.4);'
+  }`}
+>
+  <PhoneIcon size={size === 'lg' ? 24 : size === 'sm' ? 17 : 20} color={iconColor} />
+  {text}
+</a>

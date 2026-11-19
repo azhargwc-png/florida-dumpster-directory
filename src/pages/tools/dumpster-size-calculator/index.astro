@@ -1,0 +1,36 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { PHONE } from '../../../config';
+---
+<Layout
+  title="Dumpster Size Calculator | Florida Dumpster Directory"
+  description={`Free dumpster size calculator — pick your project and get a recommended roll-off size for Southwest Florida, with weight guidance. Then call a local hauler at ${PHONE}.`}
+  pageUrl="/tools/dumpster-size-calculator/"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Tools', path: '/tools/' },
+    { name: 'Dumpster Size Calculator', path: '/tools/dumpster-size-calculator/' },
+  ]}
+>
+  <Breadcrumb items={[
+    { name: 'Home', path: '/' },
+    { name: 'Tools', path: '/tools/' },
+    { name: 'Dumpster Size Calculator' },
+  ]} />
+
+  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:40px 0 32px">
+    <div class="wrap">
+      <h1 style="color:#fff;font-weight:700;font-size:34px;margin:0 0 10px">Dumpster Size Calculator</h1>
+      <p style="color:#C7D5EA;font-size:17px;margin:0">Match your Southwest Florida project to the right roll-off size.</p>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:32px;padding-bottom:64px">
+    <div set:html={`<iframe src="/tool-dumpster-size-calculator.html" title="Dumpster Size Calculator" style="width:100%;border:none;border-radius:12px;overflow:hidden;min-height:600px" loading="lazy" scrolling="no"></iframe>`} />
+    <noscript>
+      <p>The calculator requires JavaScript. <a href={`tel:+11234567890`}>Call {PHONE}</a> to reach a local hauler who can recommend the right size for your project.</p>
+    </noscript>
+    <p style="margin-top:24px;font-size:14px;color:var(--muted-2)">Not sure about the result? Call <a href="tel:+11234567890">{PHONE}</a> to confirm the right size with a local dumpster company serving your city.</p>
+  </div>
+</Layout>

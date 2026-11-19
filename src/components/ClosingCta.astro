@@ -1,0 +1,22 @@
+---
+import CallButton from './CallButton.astro';
+
+interface Props {
+  heading: string;
+  body: string;
+  narrow?: boolean;
+}
+const { heading, body, narrow = false } = Astro.props;
+const wrapClass = narrow ? 'wrap-article' : 'wrap-narrow';
+---
+<section style="background:linear-gradient(135deg,#F26A1B 0%,#E05410 100%);color:#fff">
+  <div class={wrapClass} style="padding-top:56px;padding-bottom:56px;text-align:center">
+    <h2 style="color:#fff;font-weight:700;font-size:28px;margin:0 0 14px">{heading}</h2>
+    <p style="margin:0 0 26px;font-size:18px;color:#FFE9DC" set:html={body} />
+    <CallButton size="lg" variant="white" />
+  </div>
+</section>
+
+<style>
+  section :global(a) { color: #fff; text-decoration: underline; }
+</style>

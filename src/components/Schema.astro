@@ -1,0 +1,66 @@
+---
+import { SITE_NAME, SITE_URL } from '../config';
+
+interface FaqItem { q: string; a: string; }
+interface Crumb { name: string; path: string; }
+interface Props {
+  pageUrl: string;
+  faq?: FaqItem[];
+  breadcrumbs?: Crumb[];
+  article?: { headline: string; about?: string } | null;
+  areaServed?: string[];
+  image?: string;
+  pubDate?: Date;
+}
+const { pageUrl, faq = [], breadcrumbs = [], article = null, areaServed = [], image, pubDate } = Astro.props;
+const abs = (p: string) => new URL(p, SITE_URL).toString();
+
+const graph: any[] = [];
+
+graph.push({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE_NAME,
+  '@id': abs('/'),
+  url: abs(pageUrl),
+  ...(areaServed.length ? { areaServed: areaServed.map((name) => ({ '@type': 'City', name })) } : {}),
+});
+
+if (breadcrumbs.length) {
+  graph.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: abs(c.path),
+    })),
+  });
+}
+
+if (article) {
+  graph.push({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.headline,
+    ...(article.about ? { about: article.about } : {}),
+    ...(image ? { image: abs(image) } : {}),
+    ...(pubDate ? { datePublished: pubDate.toISOString() } : {}),
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: abs('/') },
+  });
+}
+
+if (faq.length) {
+  graph.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/<[^>]+>/g, '') },
+    })),
+  });
+}
+---
+{graph.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}

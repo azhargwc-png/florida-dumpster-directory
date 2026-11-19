@@ -1,0 +1,126 @@
+<!--
+Page: Dumpster Cost Estimator (tool page)
+URL: /tools/dumpster-cost-estimator/
+SEO Title: Dumpster Cost Estimator | Florida Dumpster Directory
+Meta Description: See what drives your dumpster rental cost, size, weight, days, debris and access, and what to ask for an accurate quote in Southwest Florida. Then call a local hauler.
+H1: Dumpster Cost Estimator
+Schema: Organization + FAQPage + BreadcrumbList (include in page head on build)
+Note: Self-contained, no backend, no data stored. This tool does NOT output a dollar figure or a price for Southwest Florida. It shows which cost DRIVERS apply to the user's job and builds a question list for their call. Replace [PHONE] on build.
+-->
+<section class="tool">
+  <h1>Dumpster Cost Estimator</h1>
+  <p class="intro">There is no single price for a dumpster, because the cost depends on your specific job. This tool does not guess a dollar figure, instead it shows which cost <em>drivers</em> apply to your project and builds a short list of questions to ask so the quote you get is accurate and surprise-free. When you are ready, <strong>call [PHONE]</strong> to reach a local hauler for a real quote.</p>
+
+  <form id="costTool">
+    <label for="debris">What kind of debris?</label>
+    <select id="debris">
+      <option value="">Choose…</option>
+      <option value="light">Light & bulky (furniture, drywall, cleanout, shingles)</option>
+      <option value="heavy">Heavy & dense (concrete, tile, brick, dirt)</option>
+      <option value="mixed">A mix of both</option>
+      <option value="yard">Yard waste / vegetation</option>
+    </select>
+
+    <label for="days">How long do you need the box?</label>
+    <select id="days">
+      <option value="short">A few days</option>
+      <option value="long">A week or more</option>
+      <option value="unsure">Not sure yet</option>
+    </select>
+
+    <label for="placement">Where will it sit?</label>
+    <select id="placement">
+      <option value="driveway">My own driveway</option>
+      <option value="row">Street, sidewalk or swale (public right-of-way)</option>
+    </select>
+
+    <label for="access">Site access?</label>
+    <select id="access">
+      <option value="easy">Easy, standard driveway</option>
+      <option value="tight">Tight, canal-front, island, or rural/unpaved</option>
+    </select>
+
+    <button type="button" onclick="estimate()">Show my cost drivers</button>
+  </form>
+
+  <div id="result" class="result" aria-live="polite"></div>
+</section>
+
+<script>
+// Pure client-side logic. No data stored or transmitted. No price is produced.
+function estimate() {
+  var debris = document.getElementById('debris').value;
+  var days = document.getElementById('days').value;
+  var placement = document.getElementById('placement').value;
+  var access = document.getElementById('access').value;
+  var out = document.getElementById('result');
+  if (!debris) { out.innerHTML = '<p>Please choose a debris type first.</p>'; return; }
+
+  var drivers = [];
+  var questions = [];
+
+  // debris-driven
+  if (debris === 'heavy') {
+    drivers.push('<strong>Weight is your main cost driver.</strong> Dense debris reaches the box’s weight limit fast, so you’ll likely use a smaller box filled partway, and overage charges are the risk to watch.');
+    questions.push('What is the included weight allowance in tons, and what does each ton over cost?');
+    questions.push('What fill line should I stay under for this material?');
+  } else if (debris === 'light') {
+    drivers.push('<strong>Volume is your main cost driver.</strong> Light, bulky debris fills the box before it hits the weight limit, so size is the main lever.');
+    questions.push('What size do you recommend for this volume?');
+  } else if (debris === 'mixed') {
+    drivers.push('<strong>The heavy fraction drives the cost.</strong> A box of mostly light debris can still run overweight if it includes tile or concrete, so separating heavy material can lower the total.');
+    questions.push('Should I split the heavy material into a separate smaller box?');
+    questions.push('What is the included weight allowance, and the per-ton overage?');
+  } else if (debris === 'yard') {
+    drivers.push('<strong>Check the county program first.</strong> Vegetative debris often has a free or low-cost county curbside route, so a dumpster may not be the cheapest option for routine volumes.');
+    questions.push('Is my volume beyond what county curbside yard-waste collection will take?');
+    questions.push('Is wet, green debris heavy enough to affect the weight allowance?');
+  }
+
+  // days-driven
+  if (days === 'long') {
+    drivers.push('<strong>Rental length adds cost.</strong> Holding the box past the included days usually adds a daily or weekly charge.');
+    questions.push('How many days are included, and what does a longer hold cost?');
+    questions.push('Is a mid-job swap of a full box for an empty one cheaper than one long hold?');
+  } else if (days === 'unsure') {
+    questions.push('How many days are included, and what does an extension cost if the job runs long?');
+  }
+
+  // placement-driven
+  if (placement === 'row') {
+    drivers.push('<strong>A permit adds cost and a step.</strong> A box on the street, sidewalk or swale is in the public right-of-way and usually needs a right-of-way permit from the city or county.');
+    questions.push('Do I need a right-of-way permit, and do you pull it or do I?');
+  }
+
+  // access-driven
+  if (access === 'tight') {
+    drivers.push('<strong>Access can affect the job.</strong> A tight, canal-front, island or rural/unpaved site can limit box size and complicate delivery.');
+    questions.push('Will the delivery truck fit my access, and does a smaller box help?');
+  }
+
+  // debris destination is always relevant
+  questions.push('Where does my debris type go, and are there separation rules that change the price?');
+
+  var driverHtml = '<h2>Your cost drivers</h2><ul>';
+  drivers.forEach(function(d){ driverHtml += '<li>' + d + '</li>'; });
+  driverHtml += '</ul>';
+
+  var qHtml = '<h2>Questions to ask for an accurate quote</h2><ul>';
+  questions.forEach(function(q){ qHtml += '<li>' + q + '</li>'; });
+  qHtml += '</ul>';
+
+  out.innerHTML = driverHtml + qHtml +
+    '<p class="confirm">This tool does not quote a price, because an accurate number depends on your real job. Bring these answers to a local hauler. <strong>Call [PHONE]</strong> to reach a dumpster company serving your Southwest Florida city.</p>';
+}
+</script>
+
+<section class="tool-copy">
+  <h2>Why This Tool Doesn’t Show a Dollar Figure</h2>
+  <p>Any single price quoted sight-unseen is a guess. Dumpster rental is priced per job, and the same box can cost very different amounts depending on the debris weight, how long you keep it, where it sits, your site access, and the disposal fees for your debris type in your county. A made-up number would mislead you more than help you. What genuinely helps is knowing which drivers apply to your job, so the quote a hauler gives you makes sense and you can spot a surprise charge before it happens.</p>
+
+  <h2>The Main Cost Drivers, Explained</h2>
+  <p><strong>Size and weight.</strong> Bigger boxes cost more, but for heavy debris the weight allowance matters more than the size, because overage is billed per ton over the included tonnage. <strong>Rental length.</strong> Holding the box past the included days adds cost. <strong>Debris type.</strong> Different material goes to different facilities with different fees, and clean, separated loads are often cheaper than mixed ones. <strong>Access and distance.</strong> A hard-to-reach site can factor in. <strong>Permits.</strong> Right-of-way placement adds a permit cost. <strong>Season.</strong> Demand and availability tighten during and after Southwest Florida's storm season. There is more detail in <a href="/blog/how-much-does-it-cost-to-rent-a-dumpster/">what drives dumpster rental cost</a>.</p>
+
+  <h2>Get a Real Quote</h2>
+  <p>Take your cost drivers and questions to a local company for an accurate number. <strong>Call [PHONE]</strong> to reach a dumpster rental company serving your Southwest Florida city, or browse companies by city on the <a href="/locations/">Locations hub</a>. Not sure what size you need? Start with the <a href="/tools/dumpster-size-calculator/">dumpster size calculator</a>.</p>
+</section>

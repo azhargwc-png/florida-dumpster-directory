@@ -1,0 +1,57 @@
+---
+import { render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CallButton from '../components/CallButton.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import ImageBlock from '../components/ImageBlock.astro';
+import Prose from '../components/Prose.astro';
+import { PHONE } from '../config';
+import { extractFAQ } from '../lib/utils';
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const pageUrl = data.url;
+const slug = entry.id;
+const faqs = extractFAQ(entry.body ?? '');
+const heroImg = `/${slug}-1.webp`;
+---
+<Layout
+  title={data.seo_title.replace('[PHONE]', PHONE)}
+  description={data.meta_description.replace('[PHONE]', PHONE)}
+  pageUrl={pageUrl}
+  faq={faqs}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: data.h1, path: pageUrl },
+  ]}
+  image={heroImg}
+>
+  <Breadcrumb items={[
+    { name: 'Home', path: '/' },
+    { name: data.h1 },
+  ]} />
+
+  <section style="background:linear-gradient(160deg,#12284B 0%,#1B3765 70%,#1E7FC2 150%);color:#fff">
+    <div class="wrap" style="padding-top:60px;padding-bottom:60px;display:flex;flex-wrap:wrap;gap:44px;align-items:center">
+      <div style="flex:999 1 460px;min-width:0">
+        <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px">By Project</div>
+        <h1 style="color:#fff;font-weight:700;font-size:36px;line-height:1.16;margin:0 0 18px;text-wrap:pretty">{data.h1}</h1>
+        <div style="margin-bottom:22px"><CallButton size="md" /></div>
+      </div>
+      <div style="flex:1 1 300px;min-width:0">
+        <ImageBlock src={heroImg} alt={data.h1} onDark={true} />
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap-article" style="padding-top:56px;padding-bottom:56px">
+    <Prose><Content /></Prose>
+  </div>
+
+  <ClosingCta
+    heading="Call Now to Reach a Local Dumpster Company"
+    body={`Call ${PHONE} to reach a local dumpster rental company in your Southwest Florida city. Compare sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a>.`}
+  />
+</Layout>

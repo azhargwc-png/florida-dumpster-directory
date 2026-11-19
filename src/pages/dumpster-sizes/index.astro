@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CallButton from '../../components/CallButton.astro';
+import { PHONE } from '../../config';
+import { SIZES } from '../../data/home';
+import { isPublished } from '../../lib/utils';
+
+const sizes = await getCollection('sizes');
+const published = sizes.filter(e => isPublished(e.data));
+
+const orderedYards = [10, 15, 20, 30, 40];
+const sorted = orderedYards
+  .map(y => published.find(e => e.id === `${y}-yard-dumpster-rental`))
+  .filter(Boolean);
+---
+<Layout
+  title="Dumpster Sizes Guide — Southwest Florida | Florida Dumpster Directory"
+  description={`Compare 10, 15, 20, 30 and 40-yard roll-off dumpsters for Southwest Florida projects. Weight limits, typical uses, and how to choose. Call ${PHONE}.`}
+  pageUrl="/dumpster-sizes/"
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Dumpster Sizes', path: '/dumpster-sizes/' }]}
+>
+  <Breadcrumb items={[{ name: 'Home', path: '/' }, { name: 'Dumpster Sizes' }]} />
+
+  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:52px 0 44px">
+    <div class="wrap">
+      <div style="font-size:13px;font-weight:600;color:#F89B5E;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">Dumpster Sizes</div>
+      <h1 style="color:#fff;font-weight:700;font-size:38px;margin:0 0 14px">Which Dumpster Size Do You Need?</h1>
+      <p style="color:#C7D5EA;font-size:18px;margin:0 0 24px;max-width:680px">In Southwest Florida, the right size is a weight question first. Clay tile roofs, concrete and dense demolition debris fill a box by the ton well before it looks full. Use the guide below to match your project to the right container.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <CallButton size="md" />
+        <a href="/tools/dumpster-size-calculator/" style="display:inline-flex;align-items:center;gap:8px;padding:0 24px;height:48px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:9999px;color:#fff;font-weight:600;font-size:16px;text-decoration:none">Try the Size Calculator →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:52px;padding-bottom:64px">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      {SIZES.map((s, i) => {
+        const entry = sorted.find(e => e && e.id === s.href.replace(/^\//, '').replace(/\/$/, ''));
+        const popular = s.popular;
+        return (
+          <div style={`background:#fff;border-radius:16px;padding:28px;position:relative;${popular ? 'border:2px solid #F26A1B' : 'border:1px solid var(--line)'}`}>
+            {popular && <div style="position:absolute;top:-12px;left:28px;background:#F26A1B;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.04em;padding:3px 12px;border-radius:999px">MOST POPULAR</div>}
+            <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+              <div style="flex:0 0 auto">
+                <div style={`font-family:var(--font-head);font-weight:700;font-size:40px;${popular ? 'color:#F26A1B' : 'color:#1E7FC2'}`}>{s.yards}</div>
+                <a href={s.href} style={`display:inline-block;margin-top:10px;padding:8px 18px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;${popular ? 'background:#F26A1B;color:#fff' : 'background:var(--sand);color:var(--navy);border:1px solid var(--line)'}`}>See Details →</a>
+              </div>
+              <div style="flex:1 1 320px;min-width:0">
+                <p style="margin:0;color:var(--ink-2);line-height:1.7">{s.body}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <div style="margin-top:44px;background:var(--sand);border-radius:16px;padding:28px">
+      <h2 style="font-size:22px;font-weight:700;margin:0 0 10px">Still unsure?</h2>
+      <p style="margin:0 0 18px;color:var(--muted)">Use the size calculator, or call {PHONE} and describe your project to a local hauler who can confirm the right box for your load.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <CallButton size="sm" />
+        <a href="/tools/dumpster-size-calculator/" style="display:inline-flex;align-items:center;padding:0 20px;height:40px;background:#fff;border:1px solid var(--line);border-radius:9999px;font-size:15px;font-weight:600;color:var(--navy);text-decoration:none">Size Calculator →</a>
+      </div>
+    </div>
+  </div>
+</Layout>

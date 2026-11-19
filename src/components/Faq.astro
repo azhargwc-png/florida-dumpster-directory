@@ -1,0 +1,26 @@
+---
+interface FaqItem { q: string; a: string; }
+interface Props {
+  items: FaqItem[];
+  heading?: string;
+  center?: boolean;
+  narrow?: boolean;
+}
+const { items, heading = 'Frequently Asked Questions', center = true, narrow = false } = Astro.props;
+const wrapClass = narrow ? 'wrap-article' : 'wrap-narrow';
+---
+{items.length > 0 && (
+  <section style="background:var(--sand)">
+    <div class={wrapClass} style="padding-top:56px;padding-bottom:56px">
+      <h2 style={`font-weight:700;font-size:30px;margin:0 0 28px;${center ? 'text-align:center' : ''}`}>{heading}</h2>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        {items.map((item, i) => (
+          <details class="faq" open={i === 0}>
+            <summary>{item.q}</summary>
+            <p set:html={item.a} />
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

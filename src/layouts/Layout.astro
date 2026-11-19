@@ -1,0 +1,82 @@
+---
+import '../styles/theme.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Schema from '../components/Schema.astro';
+import FloatingCta from '../components/FloatingCta.astro';
+import { SITE_NAME, SITE_URL } from '../config';
+
+interface FaqItem { q: string; a: string; }
+interface Crumb { name: string; path: string; }
+interface Props {
+  title: string;
+  description: string;
+  pageUrl: string;
+  faq?: FaqItem[];
+  breadcrumbs?: Crumb[];
+  article?: { headline: string; about?: string } | null;
+  areaServed?: string[];
+  image?: string;
+  pubDate?: Date;
+  ogType?: string;
+}
+const {
+  title,
+  description,
+  pageUrl,
+  faq = [],
+  breadcrumbs = [],
+  article = null,
+  areaServed = [],
+  image,
+  pubDate,
+  ogType = 'website',
+} = Astro.props;
+const canonical = new URL(pageUrl, SITE_URL).toString();
+const ogImage = image ? new URL(image, SITE_URL).toString() : undefined;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:type" content={ogType} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+  />
+  <Schema
+    pageUrl={pageUrl}
+    faq={faq}
+    breadcrumbs={breadcrumbs}
+    article={article}
+    areaServed={areaServed}
+    image={image}
+    pubDate={pubDate}
+  />
+</head>
+<body>
+  <Header />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+  <FloatingCta />
+</body>
+</html>

@@ -1,0 +1,82 @@
+---
+import CallButton from './CallButton.astro';
+import { SITE_NAME } from '../config';
+
+const SERVICES = [
+  { title: 'Roll-off Dumpster Rental', href: '/roll-off-dumpster-rental/' },
+  { title: 'Roofing Dumpster Rental', href: '/roofing-dumpster-rental/' },
+  { title: 'Construction Dumpster Rental', href: '/construction-dumpster-rental/' },
+  { title: 'Concrete & Heavy Debris', href: '/concrete-dumpster-rental/' },
+  { title: 'Demolition Dumpster Rental', href: '/demolition-dumpster-rental/' },
+  { title: 'Yard Waste Dumpster Rental', href: '/yard-waste-dumpster-rental/' },
+];
+---
+<header style="position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(18,40,75,0.06)">
+  <div class="wrap" style="padding-top:12px;padding-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+    <a href="/" aria-label={SITE_NAME} style="display:flex;align-items:center;flex-shrink:0">
+      <img src="/Logo.png" alt={SITE_NAME} height="52" style="height:52px;width:auto" />
+    </a>
+
+    <button
+      class="nav-toggle"
+      id="navToggle"
+      aria-label="Toggle navigation"
+      aria-expanded="false"
+      style="background:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--navy)"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <nav class="nav-links" id="navLinks" style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-weight:500;font-size:15px">
+      <div class="nav-dropdown" id="servicesDropdown">
+        <button
+          id="servicesBtn"
+          style="background:none;border:none;cursor:pointer;padding:8px 12px;color:var(--navy);font-weight:500;font-size:15px;display:flex;align-items:center;gap:5px;font-family:inherit"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Services
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          {SERVICES.map((s) => (
+            <a href={s.href} role="menuitem">{s.title}</a>
+          ))}
+        </div>
+      </div>
+      <a href="/locations/" style="padding:8px 12px;color:var(--navy);text-decoration:none">Locations</a>
+      <a href="/dumpster-sizes/" style="padding:8px 12px;color:var(--navy);text-decoration:none">Dumpster Sizes</a>
+      <a href="/blog/" style="padding:8px 12px;color:var(--navy);text-decoration:none">Blog</a>
+      <a href="/about/" style="padding:8px 12px;color:var(--navy);text-decoration:none">About</a>
+      <a href="/contact/" style="padding:8px 12px;color:var(--navy);text-decoration:none">Contact</a>
+      <div style="margin-left:8px">
+        <CallButton size="sm" />
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  const servicesBtn = document.getElementById('servicesBtn');
+  const servicesDropdown = document.getElementById('servicesDropdown');
+
+  toggle?.addEventListener('click', () => {
+    const open = links?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+
+  servicesBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = servicesDropdown?.classList.toggle('open');
+    servicesBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  document.addEventListener('click', () => {
+    servicesDropdown?.classList.remove('open');
+    servicesBtn?.setAttribute('aria-expanded', 'false');
+  });
+</script>

@@ -1,0 +1,36 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { PHONE } from '../../../config';
+---
+<Layout
+  title="Dumpster Cost Estimator | Florida Dumpster Directory"
+  description={`Free dumpster cost estimator — understand what drives your roll-off rental price in Southwest Florida. Then call a local hauler at ${PHONE} for a real quote.`}
+  pageUrl="/tools/dumpster-cost-estimator/"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Tools', path: '/tools/' },
+    { name: 'Dumpster Cost Estimator', path: '/tools/dumpster-cost-estimator/' },
+  ]}
+>
+  <Breadcrumb items={[
+    { name: 'Home', path: '/' },
+    { name: 'Tools', path: '/tools/' },
+    { name: 'Dumpster Cost Estimator' },
+  ]} />
+
+  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:40px 0 32px">
+    <div class="wrap">
+      <h1 style="color:#fff;font-weight:700;font-size:34px;margin:0 0 10px">Dumpster Cost Estimator</h1>
+      <p style="color:#C7D5EA;font-size:17px;margin:0">Understand what drives your dumpster rental price in Southwest Florida.</p>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:32px;padding-bottom:64px">
+    <div set:html={`<iframe src="/tool-dumpster-cost-estimator.html" title="Dumpster Cost Estimator" style="width:100%;border:none;border-radius:12px;overflow:hidden;min-height:600px" loading="lazy" scrolling="no"></iframe>`} />
+    <noscript>
+      <p>The estimator requires JavaScript. <a href={`tel:+11234567890`}>Call {PHONE}</a> to reach a local hauler who can give you a real quote for your project.</p>
+    </noscript>
+    <p style="margin-top:24px;font-size:14px;color:var(--muted-2)">Ready for a real price? Call <a href="tel:+11234567890">{PHONE}</a> to reach a local dumpster rental company serving your city.</p>
+  </div>
+</Layout>

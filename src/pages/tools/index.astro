@@ -1,0 +1,44 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Prose from '../../components/Prose.astro';
+import { PHONE } from '../../config';
+
+const entries = await getCollection('tools');
+const hub = entries.find(e => e.id === 'tools-hub');
+if (!hub) throw new Error('tools-hub.md not found');
+const { data } = hub;
+const { Content } = await render(hub);
+---
+<Layout
+  title={data.seo_title}
+  description={data.meta_description.replace('[PHONE]', PHONE)}
+  pageUrl={data.url}
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Tools', path: '/tools/' }]}
+>
+  <Breadcrumb items={[{ name: 'Home', path: '/' }, { name: 'Tools' }]} />
+
+  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:52px 0 44px">
+    <div class="wrap">
+      <h1 style="color:#fff;font-weight:700;font-size:38px;margin:0 0 12px">{data.h1}</h1>
+      <p style="color:#C7D5EA;font-size:18px;margin:0;max-width:640px">Free tools to help you plan a dumpster rental before you call.</p>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:52px;padding-bottom:64px;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+    <div style="flex:999 1 480px;min-width:0">
+      <Prose><Content /></Prose>
+    </div>
+    <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <a href="/tools/dumpster-size-calculator/" style="display:block;padding:22px;background:var(--navy);border-radius:14px;color:#fff;text-decoration:none">
+        <div style="font-family:var(--font-head);font-weight:700;font-size:17px;margin-bottom:8px">Dumpster Size Calculator →</div>
+        <div style="font-size:14px;color:#C7D5EA">Match your project to the right size.</div>
+      </a>
+      <a href="/tools/dumpster-cost-estimator/" style="display:block;padding:22px;background:var(--orange);border-radius:14px;color:#fff;text-decoration:none">
+        <div style="font-family:var(--font-head);font-weight:700;font-size:17px;margin-bottom:8px">Dumpster Cost Estimator →</div>
+        <div style="font-size:14px;color:#FFE2CC">Understand what drives your price.</div>
+      </a>
+    </div>
+  </div>
+</Layout>

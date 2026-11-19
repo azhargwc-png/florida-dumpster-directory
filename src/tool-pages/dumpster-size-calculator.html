@@ -1,0 +1,98 @@
+<!--
+Page: Dumpster Size Calculator (tool page)
+URL: /tools/dumpster-size-calculator/
+SEO Title: Dumpster Size Calculator | Florida Dumpster Directory
+Meta Description: Free dumpster size calculator, pick your project and get a recommended roll-off size for Southwest Florida, with weight guidance. Then call a local hauler.
+H1: Dumpster Size Calculator
+Schema: Organization + FAQPage + BreadcrumbList (include in page head on build)
+Note: Self-contained, no backend, no data stored. Recommends a size from project type; never outputs a price. Replace [PHONE] on build.
+-->
+<section class="tool">
+  <h1>Dumpster Size Calculator</h1>
+  <p class="intro">Answer two quick questions and this calculator will suggest a roll-off size for your Southwest Florida project. It is a starting point, not a quote. Because heavy debris like concrete and tile hits a box's weight limit before it fills, always confirm the final size by weight with a local hauler. <strong>Call [PHONE]</strong> to reach a dumpster company serving your city.</p>
+
+  <form id="sizeCalc">
+    <label for="project">What is the project?</label>
+    <select id="project">
+      <option value="">Choose a project…</option>
+      <option value="bathroom">Bathroom remodel</option>
+      <option value="kitchen">Kitchen remodel</option>
+      <option value="multiroom">Multi-room remodel</option>
+      <option value="wholehome">Whole-home gut / renovation</option>
+      <option value="shingle">Roof replacement, shingles</option>
+      <option value="tile">Roof replacement, tile</option>
+      <option value="garage">Garage / attic cleanout</option>
+      <option value="estate">Estate / whole-house cleanout</option>
+      <option value="concrete">Concrete / brick / tile / dirt (heavy debris)</option>
+      <option value="construction">New construction / addition</option>
+      <option value="demolition">Demolition / tear-down</option>
+      <option value="yardwaste">Yard waste / landscaping</option>
+      <option value="commercial">Commercial cleanout / build-out</option>
+    </select>
+
+    <label for="access">How is the site access?</label>
+    <select id="access">
+      <option value="normal">Standard driveway, room for a long box</option>
+      <option value="tight">Tight lot, canal-front, or narrow access</option>
+    </select>
+
+    <button type="button" onclick="recommend()">Get my recommended size</button>
+  </form>
+
+  <div id="result" class="result" aria-live="polite"></div>
+</section>
+
+<script>
+// Pure client-side logic. No data is stored or sent anywhere.
+function recommend() {
+  var p = document.getElementById('project').value;
+  var access = document.getElementById('access').value;
+  var out = document.getElementById('result');
+  if (!p) { out.innerHTML = '<p>Please choose a project first.</p>'; return; }
+
+  // base recommendation by project
+  var rec = {
+    bathroom:   {size:'10–15 yard', why:'A single bathroom tear-out is a small job. If it includes heavy tile, lean to a 10-yard filled partway for the weight.'},
+    kitchen:    {size:'15–20 yard', why:'Cabinets, counters and flooring are bulky but mostly moderate weight. Watch for tile, which adds weight fast.'},
+    multiroom:  {size:'20 yard', why:'The workhorse size for debris from several rooms of remodeling.'},
+    wholehome:  {size:'30 yard', why:'A full gut produces high volume of bulky, lighter debris. Keep any tile or plaster in a separate small box for the weight.'},
+    shingle:    {size:'20 yard', why:'The standard for a single-family shingle re-roof, which balances volume and weight well.'},
+    tile:       {size:'10 yard (filled partway)', why:'Tile weighs 3–4× shingles, so it hits the weight limit fast. A small box sized by weight is correct, not a big one.'},
+    garage:     {size:'15–20 yard', why:'A garage-and-attic cleanout of household items fits the mid sizes well.'},
+    estate:     {size:'20–30 yard', why:'A 20-yard holds a typical home’s contents; step to 30 for a very full property or use a mid-job swap.'},
+    concrete:   {size:'10 yard (filled partway)', why:'Concrete, brick, tile and dirt are dense. Always a small box, filled only to the hauler’s fill line, to stay under the weight limit.'},
+    construction:{size:'30 yard', why:'New construction and additions produce high-volume, lighter debris. Split heavy block or concrete into a separate 10-yard.'},
+    demolition: {size:'20–30 yard', why:'Depends on the structure. Keep dense material (tile, plaster, masonry) in a separate 10-yard sized by weight.'},
+    yardwaste:  {size:'20–30 yard', why:'Vegetative debris is bulky. Check your county curbside yard-waste program first, it may handle routine volumes for free.'},
+    commercial: {size:'30–40 yard', why:'High-volume, lower-weight commercial debris. Ask about scheduled swaps for a long job.'}
+  };
+
+  var r = rec[p];
+  var note = '';
+  // access adjustment
+  if (access === 'tight' && ['multiroom','wholehome','estate','construction','demolition','commercial'].indexOf(p) > -1) {
+    note = '<p class="note"><strong>Access note:</strong> On a tight or canal-front lot, a long 22-foot box may not fit. Ask the hauler whether a shorter 10- or 15-yard box, or a mid-job swap, works for your site instead.</p>';
+  }
+
+  out.innerHTML =
+    '<h2>Suggested size: ' + r.size + '</h2>' +
+    '<p>' + r.why + '</p>' +
+    note +
+    '<p class="confirm">This is a starting point based on a typical project. The final size depends on your actual debris weight, so confirm it with a local hauler. <strong>Call [PHONE]</strong> to reach a dumpster company serving your Southwest Florida city.</p>';
+}
+</script>
+
+<!-- Supporting copy below the tool for depth and context -->
+<section class="tool-copy">
+  <h2>How This Calculator Works</h2>
+  <p>This calculator maps common Southwest Florida projects to the roll-off size that usually fits them, then flags the two things that change the answer: debris weight and site access. It never quotes a price, because the price depends on details only a hauler can confirm. Instead it points you to a sensible starting size so your call with a company is faster and more accurate.</p>
+
+  <h2>Why the Result Is a Starting Point, Not a Final Answer</h2>
+  <p>Two jobs that sound the same can need different boxes. A kitchen remodel with laminate counters is lighter than one with a tile floor and stone counters, and the tile is what decides the box. Heavy, dense debris, concrete, clay tile, brick, dirt, reaches a dumpster's weight limit long before it fills the space, so those loads go in a small box filled only partway, regardless of how much there is. The calculator points you toward the right size, and the hauler confirms it by weight. Read more in <a href="/blog/dumpster-sizes-explained/">dumpster sizes explained</a>.</p>
+
+  <h2>Match the Box to the Weight</h2>
+  <p>The single most expensive mistake in Southwest Florida is ordering by how big the pile looks. If your debris is dense, expect a smaller box than the volume suggests, and ask the hauler for the included weight allowance in tons and the per-ton overage rate. For light, bulky debris like furniture, drywall and shingles, volume is the limit and you size up. Compare all five sizes on the <a href="/dumpster-sizes/">Dumpster Sizes hub</a>.</p>
+
+  <h2>Confirm Access Before You Book</h2>
+  <p>On a tight canal-front lot or in an older, closely-spaced neighborhood, a 22-foot box may not physically fit, and the delivery truck needs a straight approach and clear overhead space. The calculator flags this for the larger project types, but it is worth confirming your site with the hauler for any size.</p>
+</section>

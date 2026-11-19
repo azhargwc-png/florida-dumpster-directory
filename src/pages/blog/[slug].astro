@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Prose from '../../components/Prose.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { PHONE } from '../../config';
+import { isPublished, extractFAQ } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts
+    .filter(e => isPublished(e.data))
+    .map(entry => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const faqs = extractFAQ(entry.body ?? '');
+const heroImg = `/${entry.id}.webp`;
+---
+<Layout
+  title={data.seo_title.replace('[PHONE]', PHONE)}
+  description={data.meta_description.replace('[PHONE]', PHONE)}
+  pageUrl={data.url}
+  faq={faqs}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Blog', path: '/blog/' },
+    { name: data.h1, path: data.url },
+  ]}
+  article={{ headline: data.h1 }}
+  image={heroImg}
+  pubDate={data.pubDate}
+  ogType="article"
+>
+  <Breadcrumb items={[
+    { name: 'Home', path: '/' },
+    { name: 'Blog', path: '/blog/' },
+    { name: data.h1 },
+  ]} />
+
+  <div style="background:linear-gradient(160deg,#12284B 0%,#1B3765 100%);color:#fff;padding:48px 0 40px">
+    <div class="wrap-article">
+      {data.pubDate && (
+        <div style="font-size:13px;color:#F89B5E;font-weight:600;margin-bottom:12px">
+          {data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </div>
+      )}
+      <h1 style="color:#fff;font-weight:700;font-size:36px;line-height:1.2;margin:0;text-wrap:pretty">{data.h1}</h1>
+    </div>
+  </div>
+
+  <div class="wrap-article" style="padding-top:48px;padding-bottom:64px">
+    <Prose><Content /></Prose>
+  </div>
+
+  <ClosingCta
+    heading="Call Now to Reach a Local Dumpster Company"
+    body={`Call ${PHONE} to get connected with a dumpster rental company in your Southwest Florida city.`}
+    narrow={true}
+  />
+</Layout>

@@ -1,0 +1,32 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  wide?: boolean;
+  onDark?: boolean;
+  label?: string;
+}
+const { src, alt = '', wide = false, onDark = false, label = 'Image' } = Astro.props;
+const ar = wide ? 'aspect-ratio:16/9' : 'aspect-ratio:1/1';
+---
+{src ? (
+  <img
+    src={src}
+    alt={alt}
+    loading="lazy"
+    decoding="async"
+    style={`width:100%;border-radius:var(--radius-lg);${ar};object-fit:cover`}
+  />
+) : (
+  <div
+    class={`ph ${onDark ? 'ph--onDark' : ''} ${wide ? 'ph--wide' : ''}`}
+    aria-label={label}
+  >
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke={onDark ? '#DCE6F4' : '#8A8370'} stroke-width="1.6"/>
+      <circle cx="8.5" cy="10" r="1.8" fill={onDark ? '#DCE6F4' : '#8A8370'}/>
+      <path d="m5 17 4.5-4 3 2.5L16 11l3 3.5" stroke={onDark ? '#DCE6F4' : '#8A8370'} stroke-width="1.6" fill="none"/>
+    </svg>
+    <div style="font-weight:600;margin-top:12px;font-size:13px">{label}</div>
+  </div>
+)}

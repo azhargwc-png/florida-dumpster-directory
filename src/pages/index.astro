@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CallButton from '../components/CallButton.astro';
+import Faq from '../components/Faq.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import ImageBlock from '../components/ImageBlock.astro';
+import { PHONE, DISCLOSURE_LINE } from '../config';
+import { COUNTIES, SIZES, PROJECTS, STATS, HOME_FAQ, HOME_AREA_SERVED } from '../data/home';
+
+const seoTitle = 'Dumpster Rental Florida Directory | Find Local Haulers';
+const metaDescription = `Find and reach dumpster rental companies across Southwest Florida. Browse local haulers by city, compare real review counts, and call to get connected. ${PHONE}`;
+---
+<Layout
+  title={seoTitle}
+  description={metaDescription}
+  pageUrl="/"
+  faq={HOME_FAQ}
+  areaServed={HOME_AREA_SERVED}
+  image="/homepage-1.webp"
+>
+  <!-- Hero -->
+  <section style="background:linear-gradient(160deg,#12284B 0%,#1B3765 60%,#1E7FC2 140%);color:#fff">
+    <div class="wrap" style="padding-top:72px;padding-bottom:72px;display:flex;flex-wrap:wrap;gap:48px;align-items:center">
+      <div style="flex:999 1 460px;min-width:0">
+        <div style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#FFE2CC;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:20px">23 cities · 6 counties · Southwest Florida</div>
+        <h1 style="color:#fff;font-weight:700;font-size:44px;line-height:1.12;margin:0 0 18px;text-wrap:pretty">Florida Dumpster Directory, Find a Local Dumpster Rental Company Near You</h1>
+        <div style="margin-bottom:24px">
+          <CallButton size="md" label={`Call ${PHONE}, Get Connected With a Local Dumpster Company`} />
+        </div>
+        <p style="font-size:18px;line-height:1.6;margin:0 0 16px;color:#DCE6F4;max-width:580px">Southwest Florida runs on roll-off dumpsters, from the barrier islands off Sarasota down to Marco Island, and this directory lists the local companies that drop them. Florida Dumpster Directory covers 23 cities across Lee, Collier, Charlotte, Sarasota, DeSoto and Hendry counties. Call {PHONE} and get pointed to a dumpster rental company that works your city.</p>
+        <p style="font-size:18px;line-height:1.6;margin:0;color:#DCE6F4;max-width:580px">This is a directory, not a hauler. Every city page lists real local dumpster companies with their real Google review counts, so you can see who actually serves your area before you pick up the phone. Choose your city, look at the options, and call {PHONE} — one call connects you with a local company for your project.</p>
+      </div>
+      <div style="flex:1 1 320px;min-width:0">
+        <ImageBlock src="/homepage-1.webp" alt="Florida dumpster rental" onDark={true} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Cities by county -->
+  <section id="cities" class="wrap" style="padding-top:64px;padding-bottom:64px">
+    <h2 style="font-weight:700;font-size:32px;margin:0 0 12px">Find Dumpster Rental by City</h2>
+    <p style="max-width:820px;margin:0 0 24px;color:var(--muted)">Southwest Florida is six counties stitched together along the Gulf, and the rules change as you cross each county line, so the directory is organized by county and city. A roll-off that drops with no paperwork in unincorporated Lee County might need a right-of-way permit two miles away inside the City of Fort Myers. Each city page lists the local dumpster companies, the roll-off sizes they commonly run, and the placement and permit rules that apply there.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px">
+      {COUNTIES.map((c, i) => (
+        <div style={`background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;border-top:4px solid ${i % 2 === 0 ? '#F26A1B' : '#1E7FC2'}`}>
+          <h3 style="font-size:18px;margin:0 0 12px">{c.name}</h3>
+          <p style="margin:0;font-size:15px;color:var(--muted);line-height:1.8">{c.cities}</p>
+        </div>
+      ))}
+    </div>
+    <p style="margin:24px 0 0;font-size:16px"><a href="/locations/" style="font-weight:600;text-decoration:none">→ See all cities on the Locations hub</a> · <a href={`tel:+11234567890`} style="font-weight:600;text-decoration:none">Call {PHONE} to reach a local company now</a></p>
+  </section>
+
+  <!-- Sizes -->
+  <section id="sizes" style="background:var(--sand)">
+    <div class="wrap" style="padding-top:64px;padding-bottom:64px">
+      <h2 style="font-weight:700;font-size:32px;margin:0 0 12px">Dumpster Sizes You Can Rent in Southwest Florida</h2>
+      <p style="max-width:820px;margin:0 0 36px;color:var(--muted)">Roll-off dumpsters come in five common sizes, and in Southwest Florida the right one is decided by weight, not just how much the box holds. The region's heaviest debris — concrete, clay roof tile, sand-laden demolition waste — hits a container's weight limit long before it looks full, so a box that overflows on volume can still be half-empty on tonnage, or the reverse. Picking by weight is what keeps you off the overage bill.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        {SIZES.map((s) => (
+          <div style={`display:flex;flex-wrap:wrap;gap:20px;align-items:baseline;background:#fff;border-radius:12px;padding:20px 24px;position:relative;${s.popular ? 'border:2px solid #F26A1B' : 'border:1px solid var(--line)'}`}>
+            {s.popular && <div style="position:absolute;top:-11px;left:24px;background:#F26A1B;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.03em;padding:3px 10px;border-radius:999px">MOST POPULAR</div>}
+            <div style={`flex:0 0 90px;font-family:var(--font-head);font-weight:700;font-size:22px;color:${s.popular ? '#F26A1B' : '#1E7FC2'}`}>{s.yards}</div>
+            <p style="flex:1 1 400px;min-width:0;margin:0;color:var(--ink-2)">{s.body} <a href={s.href}>See the {s.yards} page</a>.</p>
+          </div>
+        ))}
+      </div>
+      <p style="margin:28px 0 0;font-size:16px"><a href="/dumpster-sizes/" style="font-weight:600;text-decoration:none">→ Compare every size side by side on the Dumpster Sizes hub</a> · not sure which fits? Try the <a href="/tools/dumpster-size-calculator/" style="font-weight:600;text-decoration:none">dumpster size calculator</a></p>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="wrap" style="padding-top:64px;padding-bottom:64px">
+    <h2 style="font-weight:700;font-size:32px;margin:0 0 12px">Dumpster Rental by Project</h2>
+    <p style="max-width:820px;margin:0 0 36px;color:var(--muted)">Different jobs need different boxes and follow different Florida debris rules — roofing, construction and demolition loads go to C&D facilities, yard waste follows separate landfill rules, and household hazardous waste is barred from a roll-off entirely. These pages explain what a complete job looks like and how the debris is handled.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:18px">
+      {PROJECTS.map((p) => (
+        <a href={p.href} style="text-decoration:none;display:block;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px">
+          <span style="font-family:var(--font-head);font-weight:600;font-size:17px;color:var(--navy);display:block;margin-bottom:6px">{p.title}</span>
+          <span style="color:var(--muted);font-size:15px" set:html={p.body} />
+        </a>
+      ))}
+    </div>
+    <p style="margin:24px 0 0;font-size:14px;color:var(--muted-2);font-style:italic">{DISCLOSURE_LINE}</p>
+  </section>
+
+  <!-- Why SWFL -->
+  <section style="background:var(--navy);color:#fff">
+    <div class="wrap" style="padding-top:64px;padding-bottom:64px">
+      <h2 style="color:#fff;font-weight:700;font-size:30px;margin:0 0 20px">Why Southwest Florida Keeps Dumpster Companies Busy</h2>
+      <p style="color:#C7D5EA;margin:0 0 28px;max-width:880px">Two things drive dumpster demand in this region: the age and ownership of the housing, and the weather that lands on it.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;margin-bottom:32px">
+        <div style="flex:999 1 460px;min-width:0">
+          <h3 style="color:#F89B5E;font-weight:600;font-size:19px;margin:0 0 12px">On housing, the Census tells the story.</h3>
+          <p style="color:#C7D5EA;margin:0">In Lee County, Census ACS 2019–2023 figures record 74.0% owner-occupied homes and a median owner-occupied value of $326,300. The housing stock is maturing: roughly 24% was built in the 1980s and 1990s, with new construction (2000 and later) making up the majority. Owner-occupied homes that are now 30 to 50 years old are exactly the homes that get re-roofed, gutted and remodeled. Collier County, which includes Naples and Marco Island, runs well above the Lee County median, tracking heavier remodel and rebuild spending on the Collier coast.</p>
+        </div>
+        <div style="flex:1 1 280px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:14px">
+          {STATS.map((s) => (
+            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:18px">
+              <div style="font-family:var(--font-head);font-weight:700;font-size:26px;color:#F89B5E">{s.value}</div>
+              <div style="font-size:13px;color:#AEC2DF;margin-top:4px">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <h3 style="color:#F89B5E;font-weight:600;font-size:19px;margin:0 0 12px">The Southwest Florida climate, by the numbers.</h3>
+      <p style="color:#C7D5EA;margin:0 0 20px;max-width:880px">NOAA's 1991–2020 normals at the Fort Myers–Page Field station record an annual mean temperature near 74.7°F and roughly 54 inches of rain a year — well above the U.S. average — with the bulk of it falling in the June-to-November wet season that overlaps Atlantic hurricane season. That single stretch of the calendar is when driveways fill up. Storms turn into debris, and a private roll-off handles the ineligible, private-property and rebuild debris that county curbside storm programs will not pick up.</p>
+      <p style="color:#C7D5EA;margin:0;max-width:880px">The ground shapes the job as much as the sky. Much of Southwest Florida is sandy soil with a high water table and canal-front or swale lots, so where a box can legally and safely sit is a real question. Paver driveways, common across the region's newer communities, can crack under the point load of a loaded roll-off, which is why placement and surface protection come up on nearly every job.</p>
+    </div>
+  </section>
+
+  <!-- How to choose -->
+  <section class="wrap" style="padding-top:64px;padding-bottom:64px;display:flex;flex-wrap:wrap;gap:44px;align-items:flex-start">
+    <div style="flex:999 1 520px;min-width:0">
+      <h2 style="font-weight:700;font-size:30px;margin:0 0 12px">How to Choose a Dumpster Rental Company in Southwest Florida</h2>
+      <p style="color:var(--muted);margin:0 0 24px;max-width:640px">A directory listing and a review count tell you a company exists and that past customers rated it — they do not tell you it is the right fit for your job. Work through these before you book any hauler.</p>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div><div style="font-family:var(--font-head);font-weight:600;color:var(--navy);margin-bottom:5px">Match the box to the weight, not just the volume.</div><p style="margin:0;color:var(--muted);font-size:16px">The single most expensive mistake in this region is ordering by how big the pile looks. Concrete, tile and wet post-storm debris are dense, so ask the company what the box's included weight allowance is in tons and what the overage rate is per ton over that.</p></div>
+        <div><div style="font-family:var(--font-head);font-weight:600;color:var(--navy);margin-bottom:5px">Confirm the placement and who pulls the permit.</div><p style="margin:0;color:var(--muted);font-size:16px">A roll-off sitting entirely on your own driveway usually needs no permit. The moment it touches a street, sidewalk, swale or any public right-of-way, the city or county usually requires a right-of-way permit. Ask the company whether they pull the permit or you do.</p></div>
+        <div><div style="font-family:var(--font-head);font-weight:600;color:var(--navy);margin-bottom:5px">Ask where the debris actually goes.</div><p style="margin:0;color:var(--muted);font-size:16px">Florida routes debris by type. Construction-and-demolition loads go to C&D facilities. Yard waste follows separate rules. Household hazardous waste — paint, motor oil, batteries, propane tanks, electronics — is barred from a roll-off and must go to a county collection program.</p></div>
+        <div><div style="font-family:var(--font-head);font-weight:600;color:var(--navy);margin-bottom:5px">Check the rental terms and the swap-out plan.</div><p style="margin:0;color:var(--muted);font-size:16px">Ask how many days the base rental covers, what a longer hold costs, and whether they can swap a full box for an empty one mid-job on a large project.</p></div>
+      </div>
+      <p style="margin:22px 0 0;font-size:14px;color:var(--muted-2);font-style:italic">{DISCLOSURE_LINE}</p>
+    </div>
+    <div style="flex:1 1 280px;min-width:0">
+      <div style="position:sticky;top:90px">
+        <ImageBlock src="/homepage-2.webp" alt="Dumpster rental Southwest Florida" />
+      </div>
+    </div>
+  </section>
+
+  <Faq items={HOME_FAQ} />
+
+  <ClosingCta
+    heading="Call Now to Reach a Local Dumpster Company"
+    body={`Pick your city from the directory, look at the local companies and their review counts, and call ${PHONE} to get connected with a dumpster rental company serving your area.`}
+  />
+</Layout>
