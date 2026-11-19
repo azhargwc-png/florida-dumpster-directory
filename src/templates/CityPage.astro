@@ -141,8 +141,11 @@ const bodyImg = `/${slug}-2.webp`;
     padding-top: 56px;
     padding-bottom: 64px;
   }
+  .city-content { min-width: 0; }
+  .city-sidebar { min-width: 0; align-self: start; position: sticky; top: 88px; }
   @media (max-width: 900px) {
     .city-body { grid-template-columns: 1fr; }
+    .city-sidebar { position: static; }
   }
 
   .city-sidebar__cta {
@@ -151,8 +154,6 @@ const bodyImg = `/${slug}-2.webp`;
     padding: 26px;
     color: #fff;
     margin-bottom: 16px;
-    position: sticky;
-    top: 88px;
   }
   .city-sidebar__head {
     font-family: var(--font-head);

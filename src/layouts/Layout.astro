@@ -2,7 +2,6 @@
 import '../styles/theme.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Schema from '../components/Schema.astro';
 import FloatingCta from '../components/FloatingCta.astro';
 import { SITE_NAME, SITE_URL } from '../config';
 
@@ -21,19 +20,50 @@ interface Props {
   ogType?: string;
 }
 const {
-  title,
-  description,
-  pageUrl,
-  faq = [],
-  breadcrumbs = [],
-  article = null,
-  areaServed = [],
-  image,
-  pubDate,
-  ogType = 'website',
+  title, description, pageUrl,
+  faq = [], breadcrumbs = [], article = null,
+  areaServed = [], image, pubDate, ogType = 'website',
 } = Astro.props;
+
 const canonical = new URL(pageUrl, SITE_URL).toString();
 const ogImage = image ? new URL(image, SITE_URL).toString() : undefined;
+const abs = (p: string) => new URL(p, SITE_URL).toString();
+
+// Build JSON-LD nodes inline — Fragment set:html is the only reliable way in Astro
+const schemaNodes: any[] = [];
+schemaNodes.push({
+  '@context': 'https://schema.org', '@type': 'Organization',
+  name: SITE_NAME, '@id': abs('/'), url: abs(pageUrl),
+  ...(areaServed.length ? { areaServed: areaServed.map(n => ({ '@type': 'City', name: n })) } : {}),
+});
+if (breadcrumbs.length) {
+  schemaNodes.push({
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.path) })),
+  });
+}
+if (article) {
+  schemaNodes.push({
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: article.headline,
+    ...(article.about ? { about: article.about } : {}),
+    ...(image ? { image: abs(image) } : {}),
+    ...(pubDate ? { datePublished: pubDate.toISOString() } : {}),
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: abs('/') },
+  });
+}
+if (faq.length) {
+  schemaNodes.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: faq.map(f => ({
+      '@type': 'Question', name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/<[^>]+>/g, '') },
+    })),
+  });
+}
+const schemaHtml = schemaNodes
+  .map(n => `<script type="application/ld+json">${JSON.stringify(n)}</script>`)
+  .join('\n');
 ---
 <!doctype html>
 <html lang="en">
@@ -57,19 +87,9 @@ const ogImage = image ? new URL(image, SITE_URL).toString() : undefined;
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-  />
-  <Schema
-    pageUrl={pageUrl}
-    faq={faq}
-    breadcrumbs={breadcrumbs}
-    article={article}
-    areaServed={areaServed}
-    image={image}
-    pubDate={pubDate}
-  />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
+  <Fragment set:html={schemaHtml} />
 </head>
 <body>
   <Header />

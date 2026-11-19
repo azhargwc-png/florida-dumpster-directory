@@ -136,8 +136,11 @@ const bodyImg = `/${slug}-2.webp`;
     padding-top: 56px;
     padding-bottom: 64px;
   }
+  .service-content { min-width: 0; }
+  .service-sidebar { min-width: 0; align-self: start; position: sticky; top: 88px; }
   @media (max-width: 900px) {
     .service-body { grid-template-columns: 1fr; }
+    .service-sidebar { position: static; }
   }
 
   .service-sidebar__cta {

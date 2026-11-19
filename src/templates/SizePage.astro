@@ -142,8 +142,11 @@ const yards = parseInt(pageUrl.match(/^\/(\d+)-yard/)?.[1] ?? '0');
     padding-top: 56px;
     padding-bottom: 64px;
   }
+  .size-content { min-width: 0; }
+  .size-sidebar { min-width: 0; align-self: start; position: sticky; top: 88px; }
   @media (max-width: 900px) {
     .size-body { grid-template-columns: 1fr; }
+    .size-sidebar { position: static; }
   }
 
   .size-sidebar__cta {

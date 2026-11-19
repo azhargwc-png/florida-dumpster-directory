@@ -51,9 +51,14 @@ body {
   font-size: 17px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
   /* space for floating CTA on mobile */
   padding-bottom: 80px;
 }
+
+/* Prevent long text/URLs from blowing out layouts */
+p, li, td, th, figcaption { overflow-wrap: break-word; word-break: break-word; }
+img { max-width: 100%; height: auto; display: block; }
 
 @media (min-width: 640px) {
   body { padding-bottom: 0; }

@@ -137,9 +137,11 @@ const hasImg = true; // webp images were included for all blog posts
     padding-top: 52px;
     padding-bottom: 64px;
   }
+  .post-content { min-width: 0; }
+  .post-sidebar { min-width: 0; align-self: start; position: sticky; top: 88px; }
   @media (max-width: 860px) {
     .post-body { grid-template-columns: 1fr; }
-    .post-sidebar { order: -1; }
+    .post-sidebar { position: static; order: -1; }
   }
 
   .sidebar-cta {
