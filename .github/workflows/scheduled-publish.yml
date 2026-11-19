@@ -1,0 +1,27 @@
+name: Scheduled publish
+
+# Runs daily at 06:00 UTC. When a content file's pubDate passes, the next
+# daily run will push an empty commit that triggers a Cloudflare Pages rebuild,
+# making that page go live.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC every day
+  workflow_dispatch:        # also allows manual trigger from GitHub Actions UI
+
+jobs:
+  trigger-rebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push rebuild trigger
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git commit --allow-empty -m "chore: scheduled rebuild $(date -u +%Y-%m-%d)"
+          git push
