@@ -93,11 +93,15 @@ const { class: cls = '' } = Astro.props;
   .prose :global(details.faq > p) { margin: 0 0 14px; color: var(--muted); line-height: 1.7; }
 
   /* FAQ section wrapper */
-  .prose :global(.faq-section) { margin: 32px 0; }
-  .prose :global(.faq-section h2) { margin-bottom: 18px; }
+  .prose :global(.faq-section) { margin: 48px 0 56px; }
+  .prose :global(.faq-section h2) { margin-bottom: 20px; }
+
+  /* Heading after the FAQ section gets extra breathing room */
+  .prose :global(.faq-section + h2),
+  .prose :global(.faq-section + h3) { margin-top: 0; }
 
   /* Horizontal rule */
   .prose :global(hr) {
-    border: none; border-top: 1px solid var(--line); margin: 36px 0;
+    border: none; border-top: 1px solid var(--line); margin: 48px 0;
   }
 </style>
