@@ -71,6 +71,7 @@ const bodyImg = `/${slug}-2.webp`;
         <a href="/concrete-dumpster-rental/">→ Concrete &amp; heavy debris</a>
       </div>
       <img src={bodyImg} alt={`${meta.name} dumpster rental`} loading="lazy" decoding="async"
+        onerror="this.style.display='none'"
         style="width:100%;border-radius:14px;object-fit:cover;aspect-ratio:4/3;margin-top:18px" />
     </aside>
   </div>

@@ -79,7 +79,8 @@ function recommend() {
     '<p>' + r.why + '</p>' +
     note +
     '<p class="confirm">This is a starting point based on a typical project. The final size depends on your actual debris weight, so confirm it with a local hauler. <strong>Call [PHONE]</strong> to reach a dumpster company serving your Southwest Florida city.</p>';
-  out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  var top = out.getBoundingClientRect().top + window.pageYOffset - 108;
+  window.scrollTo({ top: top, behavior: 'smooth' });
 }
 </script>
 

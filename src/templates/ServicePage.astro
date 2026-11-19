@@ -66,6 +66,7 @@ const bodyImg = `/${slug}-2.webp`;
         <a href="/locations/">Browse by city</a>
       </div>
       <img src={bodyImg} alt={data.h1} loading="lazy" decoding="async"
+        onerror="this.style.display='none'"
         style="width:100%;border-radius:14px;object-fit:cover;aspect-ratio:4/3;margin-top:18px" />
     </aside>
   </div>

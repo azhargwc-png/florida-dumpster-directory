@@ -32,7 +32,8 @@ const posts = allPosts
       {posts.map((post) => (
         <a href={post.data.url} class="blog-card">
           <div class="blog-card__img">
-            <img src={`/${post.id}.webp`} alt={post.data.h1} loading="lazy" decoding="async" />
+            <img src={`/${post.id}.webp`} alt={post.data.h1} loading="lazy" decoding="async"
+              onerror="this.style.display='none'" />
           </div>
           <div class="blog-card__body">
             {post.data.pubDate && (

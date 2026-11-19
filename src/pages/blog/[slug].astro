@@ -43,21 +43,22 @@ const hasImg = true; // webp images were included for all blog posts
     { name: data.h1 },
   ]} />
 
-  <!-- Hero with featured image -->
-  <div class="post-hero">
-    <div class="post-hero__img">
-      <img src={heroImg} alt={data.h1} loading="eager" decoding="async" />
+  <!-- Article header -->
+  <section class="post-header">
+    <div class="wrap-article">
+      {data.pubDate && (
+        <div class="post-date">
+          {data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </div>
+      )}
+      <h1>{data.h1}</h1>
     </div>
-    <div class="post-hero__overlay">
-      <div class="wrap-article">
-        {data.pubDate && (
-          <div class="post-date">
-            {data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-          </div>
-        )}
-        <h1>{data.h1}</h1>
-      </div>
-    </div>
+  </section>
+
+  <!-- Lead image (hides itself if the webp doesn't exist) -->
+  <div class="post-lead-img">
+    <img src={heroImg} alt={data.h1} loading="eager" decoding="async"
+      onerror="this.closest('.post-lead-img').style.display='none'" />
   </div>
 
   <!-- Content + sidebar -->
@@ -89,44 +90,45 @@ const hasImg = true; // webp images were included for all blog posts
 </Layout>
 
 <style>
-  .post-hero {
-    position: relative;
-    background: var(--navy-deep);
-    overflow: hidden;
+  /* ---- Article header ---- */
+  .post-header {
+    background: var(--navy);
+    padding: 44px 0 40px;
   }
-  .post-hero__img img {
-    width: 100%;
-    max-height: 420px;
-    object-fit: cover;
-    display: block;
-    opacity: 0.45;
-  }
-  .post-hero__overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 36px;
-  }
+  .post-header .wrap-article { width: 100%; }
   .post-date {
-    font-size: 13px;
-    font-weight: 600;
-    color: #F89B5E;
-    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--amber);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
   }
-  .post-hero__overlay h1 {
+  .post-header h1 {
     color: #fff;
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 700;
     margin: 0;
     line-height: 1.2;
     text-wrap: pretty;
   }
   @media (max-width: 640px) {
-    .post-hero__overlay h1 { font-size: 26px; }
-    .post-hero__img img { max-height: 260px; }
+    .post-header { padding: 28px 0 24px; }
+    .post-header h1 { font-size: 26px; }
+  }
+
+  /* ---- Lead image ---- */
+  .post-lead-img {
+    width: 100%;
+    overflow: hidden;
+    max-height: 480px;
+    background: var(--navy);
+  }
+  .post-lead-img img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    display: block;
   }
 
   .post-body {

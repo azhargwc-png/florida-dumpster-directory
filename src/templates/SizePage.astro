@@ -72,6 +72,7 @@ const yards = parseInt(pageUrl.match(/^\/(\d+)-yard/)?.[1] ?? '0');
         <a href="/tools/dumpster-size-calculator/" style="margin-top:6px;color:var(--orange)">→ Size calculator</a>
       </div>
       <img src={bodyImg} alt={`${yards}-yard dumpster rental`} loading="lazy" decoding="async"
+        onerror="this.style.display='none'"
         style="width:100%;border-radius:14px;object-fit:cover;aspect-ratio:4/3;margin-top:18px" />
     </aside>
   </div>
