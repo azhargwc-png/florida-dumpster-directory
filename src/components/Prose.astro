@@ -11,10 +11,9 @@ const { class: cls = '' } = Astro.props;
 
   .prose :global(h2) {
     font-family: var(--font-head); font-weight: 700; font-size: 24px;
-    color: var(--navy); margin: 44px 0 14px; padding-top: 8px;
-    border-top: 2px solid var(--line);
+    color: var(--navy); margin: 44px 0 14px;
   }
-  .prose :global(h2:first-child) { margin-top: 0; border-top: none; padding-top: 0; }
+  .prose :global(h2:first-child) { margin-top: 0; }
 
   .prose :global(h3) {
     font-family: var(--font-head); font-weight: 600; font-size: 19px;
