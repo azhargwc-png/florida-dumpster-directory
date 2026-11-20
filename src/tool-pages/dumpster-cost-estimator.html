@@ -34,6 +34,16 @@ Note: Self-contained, no backend, no data stored. This tool does NOT output a do
       <option value="row">Street, sidewalk or swale (public right-of-way)</option>
     </select>
 
+    <label for="size">What size are you considering? <span style="font-weight:400;color:#666">(optional — helps show price ranges)</span></label>
+    <select id="size">
+      <option value="">Not sure yet</option>
+      <option value="10">10-yard (small cleanouts, single-room remodels)</option>
+      <option value="15">15-yard (kitchen/bath remodel, mid-size cleanout)</option>
+      <option value="20">20-yard (whole-room renovation, large cleanout)</option>
+      <option value="30">30-yard (full renovation, roofing project)</option>
+      <option value="40">40-yard (major construction, full demo)</option>
+    </select>
+
     <label for="access">Site access?</label>
     <select id="access">
       <option value="easy">Easy, standard driveway</option>
@@ -48,11 +58,20 @@ Note: Self-contained, no backend, no data stored. This tool does NOT output a do
 
 <script>
 // Pure client-side logic. No data stored or transmitted. No price is produced.
+var swPrices = {
+  '10': { base: '$295–$425', heavy: '$325–$475', note: 'Heavy debris fills a 10-yard fast — overage risk is high.' },
+  '15': { base: '$340–$490', heavy: '$375–$540', note: '' },
+  '20': { base: '$385–$545', heavy: '$425–$600', note: '' },
+  '30': { base: '$470–$650', heavy: '$510–$700', note: 'Common for full roof tear-offs and large renovations.' },
+  '40': { base: '$575–$825', heavy: '$620–$875', note: 'Largest residential size; permit usually required on street.' },
+};
+
 function estimate() {
   var debris = document.getElementById('debris').value;
   var days = document.getElementById('days').value;
   var placement = document.getElementById('placement').value;
   var access = document.getElementById('access').value;
+  var size = document.getElementById('size').value;
   var out = document.getElementById('result');
   if (!debris) { out.innerHTML = '<p>Please choose a debris type first.</p>'; return; }
 
@@ -101,6 +120,31 @@ function estimate() {
   // debris destination is always relevant
   questions.push('Where does my debris type go, and are there separation rules that change the price?');
 
+  var priceHtml = '';
+  if (size && swPrices[size]) {
+    var p = swPrices[size];
+    var range = (debris === 'heavy' || debris === 'mixed') ? p.heavy : p.base;
+    var sizeLabel = size + '-yard';
+    priceHtml = '<div class="price-range">' +
+      '<div class="price-range__label">Typical ' + sizeLabel + ' rental in Southwest Florida</div>' +
+      '<div class="price-range__value">' + range + '</div>' +
+      '<div class="price-range__sub">Based on market rates for a standard 7-day rental' + (days === 'long' ? ' — extended holds add $15–$35/day' : '') + (placement === 'row' ? ' — right-of-way permits typically add $50–$150' : '') + '</div>' +
+      (p.note ? '<div class="price-range__note">' + p.note + '</div>' : '') +
+      '</div>';
+  } else {
+    priceHtml = '<div class="price-range price-range--all">' +
+      '<div class="price-range__label">Typical Southwest Florida rental ranges (7-day)</div>' +
+      '<table class="price-table"><thead><tr><th>Size</th><th>Light debris</th><th>Heavy debris</th></tr></thead><tbody>' +
+      '<tr><td>10-yard</td><td>$295–$425</td><td>$325–$475</td></tr>' +
+      '<tr><td>15-yard</td><td>$340–$490</td><td>$375–$540</td></tr>' +
+      '<tr><td>20-yard</td><td>$385–$545</td><td>$425–$600</td></tr>' +
+      '<tr><td>30-yard</td><td>$470–$650</td><td>$510–$700</td></tr>' +
+      '<tr><td>40-yard</td><td>$575–$825</td><td>$620–$875</td></tr>' +
+      '</tbody></table>' +
+      '<div class="price-range__sub">These are market ranges — your actual quote depends on the specific drivers below. Extended holds, permits, and overage fees are not included.</div>' +
+      '</div>';
+  }
+
   var driverHtml = '<h2>Your cost drivers</h2><ul>';
   drivers.forEach(function(d){ driverHtml += '<li>' + d + '</li>'; });
   driverHtml += '</ul>';
@@ -109,8 +153,8 @@ function estimate() {
   questions.forEach(function(q){ qHtml += '<li>' + q + '</li>'; });
   qHtml += '</ul>';
 
-  out.innerHTML = driverHtml + qHtml +
-    '<p class="confirm">This tool does not quote a price, because an accurate number depends on your real job. Bring these answers to a local hauler. <strong>Call [PHONE]</strong> to reach a dumpster company serving your Southwest Florida city.</p>';
+  out.innerHTML = priceHtml + driverHtml + qHtml +
+    '<p class="confirm">These ranges show what to expect — your real quote depends on your specific job, hauler, and location. <strong>Call [PHONE]</strong> to get an accurate number from a dumpster company serving your Southwest Florida city.</p>';
   var top = out.getBoundingClientRect().top + window.pageYOffset - 108;
   window.scrollTo({ top: top, behavior: 'smooth' });
 }
